@@ -1,2 +1,3 @@
-# ghopay
-Submission for LFGHO - ETHGlobal 2024
+# GHOPAY
+
+Submission for [LFGHO](https://ethglobal.com/events/lfgho) - ETHGlobal 2024
