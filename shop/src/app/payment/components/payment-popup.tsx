@@ -1,5 +1,3 @@
-import * as React from 'react'
-
 import { ConnectKitButton } from 'connectkit'
 import { motion } from 'framer-motion'
 
@@ -64,7 +62,9 @@ export const PaymentPopup = () => (
         <Text label="or..." key={3} />
       </div>
       <div className="flex flex-col items-center mt-8 w-full">
-        <ConnectKitButton />
+        <motion.li variants={variantsItems}>
+          <ConnectKitButton />
+        </motion.li>
       </div>
     </motion.ul>
   </motion.div>
