@@ -3,7 +3,7 @@ import { getNamedAccounts, deployments, getChainId, ethers } from "hardhat";
 
 
 const func: DeployFunction = async function () {
-    if (process.env.DEPLOY !== "v0.0.1.goerli") {
+    if (process.env.DEPLOY !== "v0.0.1.sepolia") {
         return;
     }
     const { deploy } = deployments;
