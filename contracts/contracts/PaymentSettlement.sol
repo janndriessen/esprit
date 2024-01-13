@@ -65,51 +65,21 @@ contract PaymentSettlement is GelatoRelayContext, EIP712, Ownable, Pausable {
         PaymentData calldata _paymentData,
         Signature calldata _signature
     ) external whenNotPaused onlyGelatoRelay {
-
-        require(_verifySignature(_paymentData, _signature), "PaymentSettlement: invalid signature");
-
-        IERC20Permit(_paymentData.token).permit(
-            _paymentData.from,
-            address(this),
-            _paymentData.amount,
-            _paymentData.permitData.deadline,
-            _paymentData.permitData.signature.v,
-            _paymentData.permitData.signature.r,
-            _paymentData.permitData.signature.s
-        );
-
-        IERC20(_paymentData.token).safeTransferFrom(
-            _paymentData.from,
-            address(this),
-            _paymentData.amount
-        );
-
-        _obtainFeeToken(_paymentData.token);
-        _transferRelayFee();
-
-        SafeERC20.safeTransfer(
-            IERC20(_paymentData.token),
-            _paymentData.to,
-            IERC20(_paymentData.token).balanceOf(address(this))
-        );
-
-        emit Payment(
-            _paymentData.token,
-            _paymentData.from,
-            _paymentData.to,
-            _paymentData.amount
-        );
-
+        address feeToken = address(_getFeeToken());
+        uint256 fee = _getFee();
+        _settlePayment(_paymentData, _signature, feeToken, fee);
     }
 
     // This function is used to verify the data and revert the transaction
     // Only call as static call to avoid wasting gas
     function verifyData(
         PaymentData calldata _paymentData,
-        Signature calldata _signature
+        Signature calldata _signature,
+        address _feeToken,
+        uint256 _fee
     ) external whenNotPaused returns (bool) {
 
-        try this.verifyDataReverting(_paymentData, _signature) {
+        try this.verifyDataReverting(_paymentData, _signature, _feeToken, _fee) {
             revert("PaymentSettlement: verifyDataReverting did not revert");
         } catch Error(string memory reason) {
             // Check that the right error was thrown
@@ -127,35 +97,12 @@ contract PaymentSettlement is GelatoRelayContext, EIP712, Ownable, Pausable {
     // This will always revert and is only meant to be called by verifyData
     function verifyDataReverting(
         PaymentData calldata _paymentData,
-        Signature calldata _signature
+        Signature calldata _signature,
+        address _feeToken,
+        uint256 _fee
     ) external {
-
-        require(_verifySignature(_paymentData, _signature), "PaymentSettlement: invalid signature");
-
-        IERC20Permit(_paymentData.token).permit(
-            _paymentData.from,
-            address(this),
-            _paymentData.amount,
-            _paymentData.permitData.deadline,
-            _paymentData.permitData.signature.v,
-            _paymentData.permitData.signature.r,
-            _paymentData.permitData.signature.s
-        );
-
-        IERC20(_paymentData.token).safeTransferFrom(
-            _paymentData.from,
-            address(this),
-            _paymentData.amount
-        );
-
-        SafeERC20.safeTransfer(
-            IERC20(_paymentData.token),
-            _paymentData.to,
-            IERC20(_paymentData.token).balanceOf(address(this))
-        );
-
+        _settlePayment(_paymentData, _signature, _feeToken, _fee);
         revert("PaymentSettlement: verification complete");
-
     }
 
 
@@ -181,35 +128,81 @@ contract PaymentSettlement is GelatoRelayContext, EIP712, Ownable, Pausable {
 
     // ====== INTERNAL FUNCTIONS ======
 
-    function _obtainFeeToken(
-        address _paymentToken
+    function _settlePayment(
+        PaymentData calldata _paymentData,
+        Signature calldata _signature,
+        address _feeToken,
+        uint256 _fee
     ) internal {
-        address feeToken = address(_getFeeToken());
-        if(address(feeToken) == _paymentToken) {
+
+        require(_verifySignature(_paymentData, _signature), "PaymentSettlement: invalid signature");
+
+        IERC20Permit(_paymentData.token).permit(
+            _paymentData.from,
+            address(this),
+            _paymentData.amount,
+            _paymentData.permitData.deadline,
+            _paymentData.permitData.signature.v,
+            _paymentData.permitData.signature.r,
+            _paymentData.permitData.signature.s
+        );
+
+        IERC20(_paymentData.token).safeTransferFrom(
+            _paymentData.from,
+            address(this),
+            _paymentData.amount
+        );
+
+        _obtainFeeToken(_paymentData.token, _paymentData.amount, _feeToken, _fee);
+        _transferRelayFee();
+
+        SafeERC20.safeTransfer(
+            IERC20(_paymentData.token),
+            _paymentData.to,
+            IERC20(_paymentData.token).balanceOf(address(this))
+        );
+
+        emit Payment(
+            _paymentData.token,
+            _paymentData.from,
+            _paymentData.to,
+            _paymentData.amount
+        );
+
+    }
+
+
+    function _obtainFeeToken(
+        address _paymentToken,
+        uint256 _paymentAmount,
+        address _feeToken,
+        uint256 _fee
+    ) internal {
+        if(_feeToken == _paymentToken) {
             return;
         }
 
-        uint256 fee = _getFee();
-        bool isFeeTokenETH = feeToken == ETH;
+        bool isFeeTokenETH = _feeToken == ETH;
         if(isFeeTokenETH) {
-            feeToken = address(weth);
+            _feeToken = address(weth);
         }
 
+        IERC20(_paymentToken).safeApprove(address(uniV3Router), _paymentAmount);
         uniV3Router.exactOutputSingle(
             IUniV3Router.ExactOutputSingleParams({
                 tokenIn: _paymentToken,
-                tokenOut: feeToken,
+                tokenOut: _feeToken,
                 fee: 500,
                 recipient: address(this),
                 deadline: block.timestamp,
-                amountOut: fee,
-                amountInMaximum: type(uint256).max,
+                amountOut: _fee,
+                amountInMaximum: _paymentAmount,
                 sqrtPriceLimitX96: 0
             })
         );
 
         if(isFeeTokenETH) {
-            weth.withdraw(fee);
+            weth.withdraw(_fee);
         }
     }
 

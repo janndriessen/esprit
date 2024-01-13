@@ -1,9 +1,10 @@
 import { expect } from "chai";
+import { BigNumber } from "ethers";
 import { ethers, network } from "hardhat";
 import { Signer } from "ethers";
 import {
-    PaymentSettlement,
-    PaymentSettlement__factory,
+    PaymentSettlementTestHarness,
+    PaymentSettlementTestHarness__factory,
     IERC20Complete,
     IERC20Complete__factory,
 } from "../typechain-types";
@@ -14,6 +15,7 @@ import {
     generatePaymentStructs,
     generatePayCallData,
     generateVerificationCallData,
+    generateTestPaymentCalldata,
 } from "./utils";
 
 export async function impersonateAccount(address: string) {
@@ -25,11 +27,12 @@ export async function impersonateAccount(address: string) {
 }
 
 describe("PaymentSettlement", function () {
-    let paymentSettlement: PaymentSettlement;
+    let paymentSettlement: PaymentSettlementTestHarness;
     const ghoAddress = "0xcbE9771eD31e761b744D3cB9eF78A1f32DD99211";
     const ghoWhale = "0xBccD3054e883F66a71bA0f5c059322170b58A4Ef";
     const uniV3RouterAddress ="0xE592427A0AEce92De3Edee1F18E0157C05861564";
     const wethAddress = "0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6";
+    const fee = ethers.utils.parseEther("0.0000000001");
     let gho: IERC20Complete;
     let signer: Signer;
     let receiver: Signer;
@@ -43,7 +46,7 @@ describe("PaymentSettlement", function () {
         gho = IERC20Complete__factory.connect(ghoAddress, signer);
 
         receiver = signers[1];
-        paymentSettlement = await new PaymentSettlement__factory(signer).deploy(uniV3RouterAddress, wethAddress);
+        paymentSettlement = await new PaymentSettlementTestHarness__factory(signer).deploy(uniV3RouterAddress, wethAddress);
         const paymentSettlementOwner = await paymentSettlement.owner();
         paymentSettlementOwnerSigner = await impersonateAccount(paymentSettlementOwner);
         const whaleSigner = await impersonateAccount(ghoWhale);
@@ -61,11 +64,11 @@ describe("PaymentSettlement", function () {
     });
 
     describe("payment", function () {
+        const amount = ethers.utils.parseEther("1");
         it("can generate permit signature", async function () {
             const relativeDeadline = 60 * 60;
             const deadline =
                 Math.floor(new Date().getTime() / 1000) + relativeDeadline;
-            const amount = 100;
             const owner = await signer.getAddress();
             const { permitSignature } = await getTokenPermitSignature(
                 gho,
@@ -89,7 +92,6 @@ describe("PaymentSettlement", function () {
             const relativeDeadline = 60 * 60;
             const deadline =
                 Math.floor(new Date().getTime() / 1000) + relativeDeadline;
-            const amount = 100;
             const owner = await signer.getAddress();
 
             const { paymentData, paySignature } = await generatePaymentStructs(
@@ -106,18 +108,45 @@ describe("PaymentSettlement", function () {
             );
         });
 
+        it("test payment succeedes", async function () {
+            const relativeDeadline = 60 * 60;
+            const deadline =
+                Math.floor(new Date().getTime() / 1000) + relativeDeadline;
+
+            const testPaymentCallData = await generateTestPaymentCalldata(
+                gho,
+                amount,
+                deadline,
+                await receiver.getAddress(),
+                paymentSettlement,
+                wethAddress,
+                fee
+            );
+
+            const receiverBalanceBefore = await gho.balanceOf(await receiver.getAddress());
+            await signer.sendTransaction({
+                to: paymentSettlement.address,
+                data: testPaymentCallData,
+                gasLimit: 2_000_000,
+            });
+
+            const receiverBalanceAfter = await gho.balanceOf(await receiver.getAddress());
+            expect(receiverBalanceAfter).to.gt(receiverBalanceBefore);
+        });
+
         it("data verifies", async function () {
             const relativeDeadline = 60 * 60;
             const deadline =
                 Math.floor(new Date().getTime() / 1000) + relativeDeadline;
-            const amount = 100;
 
             const verifyCallData = await generateVerificationCallData(
                 gho,
                 amount,
                 deadline,
                 await receiver.getAddress(),
-                paymentSettlement
+                paymentSettlement,
+                wethAddress,
+                fee
             );
 
             const result = await signer.provider?.call({
@@ -133,14 +162,15 @@ describe("PaymentSettlement", function () {
             const relativeDeadline = 60 * 60;
             const deadline =
                 Math.floor(new Date().getTime() / 1000) + relativeDeadline;
-            const amount = 100;
 
             const verifyCallData = await generateVerificationCallData(
                 gho,
                 amount,
                 deadline,
                 await receiver.getAddress(),
-                paymentSettlement
+                paymentSettlement,
+                wethAddress,
+                fee
             );
 
             const payCallData = await generatePayCallData(
@@ -157,14 +187,15 @@ describe("PaymentSettlement", function () {
                 const relativeDeadline = 60 * 60;
                 const deadline =
                     Math.floor(new Date().getTime() / 1000) + relativeDeadline;
-                const amount = 100;
 
                 const verifyCallData = await generateVerificationCallData(
                     gho,
                     amount,
                     deadline,
                     await receiver.getAddress(),
-                    paymentSettlement
+                    paymentSettlement,
+                    wethAddress,
+                    fee
                 );
 
                 const payCallData = await generatePayCallData(

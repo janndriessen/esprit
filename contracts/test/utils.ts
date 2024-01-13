@@ -1,6 +1,6 @@
 import { ethers } from "hardhat";
 import { BigNumberish, Signer } from "ethers";
-import { PaymentSettlement, IERC20Complete } from "../typechain-types";
+import { PaymentSettlement, PaymentSettlementTestHarness, IERC20Complete } from "../typechain-types";
 
 export async function getTokenPermitSignature(
     token: IERC20Complete,
@@ -167,7 +167,9 @@ export async function generateVerificationCallData(
     amount: BigNumberish,
     deadline: BigNumberish,
     receiverAddress: string,
-    paymentSettlement: PaymentSettlement
+    paymentSettlement: PaymentSettlement,
+    feeToken: string,
+    feeAmount: BigNumberish
 ) {
     const { paymentData, paySignature } = await generatePaymentStructs(
         token,
@@ -179,7 +181,31 @@ export async function generateVerificationCallData(
 
     const verifyDataCallData = paymentSettlement.interface.encodeFunctionData(
         "verifyData",
-        [paymentData, paySignature]
+        [paymentData, paySignature, feeToken, feeAmount]
+    );
+    return verifyDataCallData;
+}
+
+export async function generateTestPaymentCalldata(
+    token: IERC20Complete,
+    amount: BigNumberish,
+    deadline: BigNumberish,
+    receiverAddress: string,
+    paymentSettlement: PaymentSettlementTestHarness,
+    feeToken: string,
+    feeAmount: BigNumberish
+) {
+    const { paymentData, paySignature } = await generatePaymentStructs(
+        token,
+        amount,
+        deadline,
+        receiverAddress,
+        paymentSettlement
+    );
+
+    const verifyDataCallData = paymentSettlement.interface.encodeFunctionData(
+        "payTest",
+        [paymentData, paySignature, feeToken, feeAmount]
     );
     return verifyDataCallData;
 }
