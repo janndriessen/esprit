@@ -26,7 +26,7 @@ contract PaymentSettlement is GelatoRelayContext, EIP712, Ownable, Pausable {
     bytes32 public constant PAY_TYPEHASH =
         keccak256("Pay(address receiver,uint256 permitNonce)");
 
-    IUniV3Router public immutable uniV3Router;
+    IUniV3Router internal immutable uniV3Router;
     IWETH public immutable weth;
     
     address internal constant ETH = 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE;
@@ -187,8 +187,8 @@ contract PaymentSettlement is GelatoRelayContext, EIP712, Ownable, Pausable {
             _feeToken = address(weth);
         }
 
-        IERC20(_paymentToken).safeApprove(address(uniV3Router), _paymentAmount);
-        uniV3Router.exactOutputSingle(
+        IERC20(_paymentToken).safeApprove(address(_getUniV3Router()), _paymentAmount);
+        _getUniV3Router().exactOutputSingle(
             IUniV3Router.ExactOutputSingleParams({
                 tokenIn: _paymentToken,
                 tokenOut: _feeToken,
@@ -221,6 +221,10 @@ contract PaymentSettlement is GelatoRelayContext, EIP712, Ownable, Pausable {
         address signer = ECDSA.recover(hash, _signature.v, _signature.r, _signature.s);
         bool result = signer == _paymentData.from;
         return(result);
+    }
+
+    function _getUniV3Router() internal virtual view returns(IUniV3Router) {
+        return(uniV3Router);
     }
 
     receive() external payable {
