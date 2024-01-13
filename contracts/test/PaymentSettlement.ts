@@ -28,6 +28,8 @@ describe("PaymentSettlement", function () {
     let paymentSettlement: PaymentSettlement;
     const ghoAddress = "0xcbE9771eD31e761b744D3cB9eF78A1f32DD99211";
     const ghoWhale = "0xBccD3054e883F66a71bA0f5c059322170b58A4Ef";
+    const uniV3RouterAddress ="0xE592427A0AEce92De3Edee1F18E0157C05861564";
+    const wethAddress = "0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6";
     let gho: IERC20Complete;
     let signer: Signer;
     let receiver: Signer;
@@ -41,7 +43,7 @@ describe("PaymentSettlement", function () {
         gho = IERC20Complete__factory.connect(ghoAddress, signer);
 
         receiver = signers[1];
-        paymentSettlement = await new PaymentSettlement__factory(signer).deploy();
+        paymentSettlement = await new PaymentSettlement__factory(signer).deploy(uniV3RouterAddress, wethAddress);
         const paymentSettlementOwner = await paymentSettlement.owner();
         paymentSettlementOwnerSigner = await impersonateAccount(paymentSettlementOwner);
         const whaleSigner = await impersonateAccount(ghoWhale);

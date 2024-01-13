@@ -15,6 +15,9 @@ import "@openzeppelin/contracts/utils/cryptography/EIP712.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/security/Pausable.sol";
 
+import "./interfaces/IUniV3Router.sol";
+import "./interfaces/IWETH.sol";
+
 
 contract PaymentSettlement is GelatoRelayContext, EIP712, Ownable, Pausable {
 
@@ -22,6 +25,11 @@ contract PaymentSettlement is GelatoRelayContext, EIP712, Ownable, Pausable {
 
     bytes32 public constant PAY_TYPEHASH =
         keccak256("Pay(address receiver,uint256 permitNonce)");
+
+    IUniV3Router public immutable uniV3Router;
+    IWETH public immutable weth;
+    
+    address internal constant ETH = 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE;
 
     struct Signature {
         uint8 v;
@@ -48,7 +56,10 @@ contract PaymentSettlement is GelatoRelayContext, EIP712, Ownable, Pausable {
         uint256 amount
     );
 
-    constructor() EIP712("PaymentSettlement", "1") {}
+    constructor(address payable _uniV3Router, address payable _weth) EIP712("PaymentSettlement", "1") {
+        uniV3Router = IUniV3Router(_uniV3Router);
+        weth = IWETH(_weth);
+    }
 
     function pay(
         PaymentData calldata _paymentData,
@@ -73,6 +84,7 @@ contract PaymentSettlement is GelatoRelayContext, EIP712, Ownable, Pausable {
             _paymentData.amount
         );
 
+        _obtainFeeToken(_paymentData.token);
         _transferRelayFee();
 
         SafeERC20.safeTransfer(
@@ -169,6 +181,38 @@ contract PaymentSettlement is GelatoRelayContext, EIP712, Ownable, Pausable {
 
     // ====== INTERNAL FUNCTIONS ======
 
+    function _obtainFeeToken(
+        address _paymentToken
+    ) internal {
+        address feeToken = address(_getFeeToken());
+        if(address(feeToken) == _paymentToken) {
+            return;
+        }
+
+        uint256 fee = _getFee();
+        bool isFeeTokenETH = feeToken == ETH;
+        if(isFeeTokenETH) {
+            feeToken = address(weth);
+        }
+
+        uniV3Router.exactOutputSingle(
+            IUniV3Router.ExactOutputSingleParams({
+                tokenIn: _paymentToken,
+                tokenOut: feeToken,
+                fee: 500,
+                recipient: address(this),
+                deadline: block.timestamp,
+                amountOut: fee,
+                amountInMaximum: type(uint256).max,
+                sqrtPriceLimitX96: 0
+            })
+        );
+
+        if(isFeeTokenETH) {
+            weth.withdraw(fee);
+        }
+    }
+
     function _verifySignature(
         PaymentData calldata _paymentData,
         Signature calldata _signature
@@ -184,6 +228,10 @@ contract PaymentSettlement is GelatoRelayContext, EIP712, Ownable, Pausable {
         address signer = ECDSA.recover(hash, _signature.v, _signature.r, _signature.s);
         bool result = signer == _paymentData.from;
         return(result);
+    }
+
+    receive() external payable {
+        require(msg.sender == address(weth), "PaymentSettlement: invalid msg.sender");
     }
 
 }
