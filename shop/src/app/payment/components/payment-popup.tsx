@@ -73,6 +73,7 @@ export const PayHeadline = ({ label }: { label: string }) => {
   )
 }
 
+/* eslint-disable @next/next/no-img-element */
 export const QRCode = ({ code }: { code: string }) => {
   return (
     <motion.li variants={variantsItems}>
