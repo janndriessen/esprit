@@ -32,7 +32,7 @@ describe("PaymentSettlement", function () {
     const ghoWhale = "0x5D2D16217C674ECBEDD6cc9C46176363a68196C3";
     const uniV3PoolAddress ="0x61875eA61fb66657F29bAF700FA5BDCC3e2DF674";
     // const paymentSettlementAddress = "0x0ec33fFbf407A983757f0F20339EB6fcf004965f";
-    const wethAddress = "0x7b79995e5f793a07bc00c21412e50ecae098e7f9";
+    const wethAddress = "0xfFf9976782d46CC05630D1f6eBAb18b2324d6B14";
     const fee = ethers.utils.parseEther("0.0000000001");
     let gho: IERC20Complete;
     let signer: Signer;
@@ -59,12 +59,12 @@ describe("PaymentSettlement", function () {
             .transfer(await signer.getAddress(), ghoAmount);
     });
 
-    // beforeEach(async function () {
-    //     snapshot = await ethers.provider.send("evm_snapshot", []);
-    // });
-    // afterEach(async function () {
-    //     await ethers.provider.send("evm_revert", [snapshot]);
-    // });
+    beforeEach(async function () {
+        snapshot = await ethers.provider.send("evm_snapshot", []);
+    });
+    afterEach(async function () {
+        await ethers.provider.send("evm_revert", [snapshot]);
+    });
 
     describe("payment", function () {
         const amount = ethers.utils.parseEther("1");
