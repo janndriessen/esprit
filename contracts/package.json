@@ -6,7 +6,9 @@
   "license": "MIT",
   "scripts": {
     "compile": "hardhat compile",
-    "test": "hardhat test"
+    "test": "hardhat test",
+    "deploy:goerli": "DEPLOY='v0.0.1.goerli' hardhat deploy",
+    "verify:goerli": "yarn hardhat etherscan-verify --network goerli --api-url https://api-goerli.etherscan.io/ --api-key $GOERLI_ETHERSCAN_API_KEY"
   },
   "devDependencies": {
     "@gelatonetwork/relay-sdk": "^5.5.0",
