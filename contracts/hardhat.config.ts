@@ -2,21 +2,21 @@ import { HardhatUserConfig } from "hardhat/config";
 import "@nomicfoundation/hardhat-toolbox";
 import "hardhat-deploy";
 
-const goerliRPCURL = "https://rpc.ankr.com/eth_goerli";
+const sepoliaRPCURL = "https://gateway.tenderly.co/public/sepolia";
 const config: HardhatUserConfig = {
     solidity: "0.8.20",
     networks: {
         hardhat: {
             forking: {
-                url: goerliRPCURL,
-                blockNumber: 10366000,
+                url: sepoliaRPCURL,
+                blockNumber: 5077000,
             },
             chainId: 5,
         },
-        goerli: {
-            url: goerliRPCURL,
+        sepolia: {
+            url: sepoliaRPCURL,
             chainId: 5,
-            accounts: process.env.GOERLI_PRIVATE_KEY ? ["0x" + process.env.GOERLI_PRIVATE_KEY] : undefined,
+            accounts: process.env.SEPOLIA_PRIVATE_KEY ? ["0x" + process.env.SEPOLIA_PRIVATE_KEY] : undefined,
         },
     },
     namedAccounts: {
@@ -25,7 +25,7 @@ const config: HardhatUserConfig = {
         },
     },
     etherscan: {
-        apiKey: process.env.GOERLI_ETHERSCAN_API_KEY ?? "abc",
+        apiKey: process.env.SEPOLIA_ETHERSCAN_API_KEY ?? "abc",
     },
 };
 export default config;

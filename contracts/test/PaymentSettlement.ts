@@ -28,11 +28,11 @@ export async function impersonateAccount(address: string) {
 
 describe("PaymentSettlement", function () {
     let paymentSettlement: PaymentSettlementTestHarness;
-    const ghoAddress = "0xcbE9771eD31e761b744D3cB9eF78A1f32DD99211";
-    const ghoWhale = "0xBccD3054e883F66a71bA0f5c059322170b58A4Ef";
-    const uniV3RouterAddress ="0xE592427A0AEce92De3Edee1F18E0157C05861564";
-    const paymentSettlementAddress = "0x0ec33fFbf407A983757f0F20339EB6fcf004965f";
-    const wethAddress = "0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6";
+    const ghoAddress = "0x5d00fab5f2F97C4D682C1053cDCAA59c2c37900D";
+    const ghoWhale = "0x5D2D16217C674ECBEDD6cc9C46176363a68196C3";
+    const uniV3PoolAddress ="0x61875eA61fb66657F29bAF700FA5BDCC3e2DF674";
+    // const paymentSettlementAddress = "0x0ec33fFbf407A983757f0F20339EB6fcf004965f";
+    const wethAddress = "0x7b79995e5f793a07bc00c21412e50ecae098e7f9";
     const fee = ethers.utils.parseEther("0.0000000001");
     let gho: IERC20Complete;
     let signer: Signer;
@@ -47,9 +47,9 @@ describe("PaymentSettlement", function () {
         gho = IERC20Complete__factory.connect(ghoAddress, signer);
 
         receiver = signers[1];
-        paymentSettlement = new PaymentSettlementTestHarness__factory(signer).attach(paymentSettlementAddress);
+        // paymentSettlement = new PaymentSettlementTestHarness__factory(signer).attach(paymentSettlementAddress);
         // Test against fresh deployment
-        // paymentSettlement = await new PaymentSettlementTestHarness__factory(signer).deploy(uniV3RouterAddress, wethAddress);
+        paymentSettlement = await new PaymentSettlementTestHarness__factory(signer).deploy(uniV3PoolAddress, wethAddress);
         const paymentSettlementOwner = await paymentSettlement.owner();
         paymentSettlementOwnerSigner = await impersonateAccount(paymentSettlementOwner);
         const whaleSigner = await impersonateAccount(ghoWhale);
@@ -59,12 +59,12 @@ describe("PaymentSettlement", function () {
             .transfer(await signer.getAddress(), ghoAmount);
     });
 
-    beforeEach(async function () {
-        snapshot = await ethers.provider.send("evm_snapshot", []);
-    });
-    afterEach(async function () {
-        await ethers.provider.send("evm_revert", [snapshot]);
-    });
+    // beforeEach(async function () {
+    //     snapshot = await ethers.provider.send("evm_snapshot", []);
+    // });
+    // afterEach(async function () {
+    //     await ethers.provider.send("evm_revert", [snapshot]);
+    // });
 
     describe("payment", function () {
         const amount = ethers.utils.parseEther("1");

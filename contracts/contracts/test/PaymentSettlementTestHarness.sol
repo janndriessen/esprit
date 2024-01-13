@@ -2,14 +2,14 @@
 pragma solidity ^0.8.17;
 
 import "../PaymentSettlement.sol";
-import "../interfaces/IUniV3Router.sol";
+import "../interfaces/IUniV3Pool.sol";
 
 
 contract PaymentSettlementTestHarness is PaymentSettlement {
 
-    IUniV3Router internal uniV3RouterOverride;
-    constructor(address payable _uniV3Router, address payable _weth) PaymentSettlement(_uniV3Router, _weth) {
-        uniV3RouterOverride = IUniV3Router(_uniV3Router);
+    IUniV3Pool internal uniV3PoolOverride;
+    constructor(address payable _uniV3Pool, address payable _weth) PaymentSettlement(_uniV3Pool, _weth) {
+        uniV3PoolOverride = IUniV3Pool(_uniV3Pool);
     } 
 
     function payTest(
@@ -21,11 +21,11 @@ contract PaymentSettlementTestHarness is PaymentSettlement {
         _settlePayment(_paymentData, _signature, _feeToken, _fee);
     }
 
-    function setUniV3Router(IUniV3Router _newRouter) external {
-        uniV3RouterOverride = _newRouter;
+    function setUniV3Pool(IUniV3Pool _newPool) external {
+        uniV3PoolOverride = _newPool;
     }
 
-    function _getUniV3Router() internal override view returns(IUniV3Router) {
-        return(uniV3RouterOverride);
+    function _getUniV3Pool() internal override view returns(IUniV3Pool) {
+        return(uniV3PoolOverride);
     }
 }

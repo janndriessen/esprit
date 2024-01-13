@@ -15,7 +15,7 @@ import "@openzeppelin/contracts/utils/cryptography/EIP712.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/security/Pausable.sol";
 
-import "./interfaces/IUniV3Router.sol";
+import "./interfaces/IUniV3Pool.sol";
 import "./interfaces/IWETH.sol";
 
 
@@ -23,13 +23,20 @@ contract PaymentSettlement is GelatoRelayContext, EIP712, Ownable, Pausable {
 
     using SafeERC20 for IERC20;
 
+    // Copied from: https://github.com/Uniswap/v3-core/blob/d8b1c635c275d2a9450bd6a78f3fa2484fef73eb/contracts/libraries/TickMath.sol#L13
+    /// @dev The minimum value that can be returned from #getSqrtRatioAtTick. Equivalent to getSqrtRatioAtTick(MIN_TICK)
+    uint160 internal constant MIN_SQRT_RATIO = 4295128739;
+    /// @dev The maximum value that can be returned from #getSqrtRatioAtTick. Equivalent to getSqrtRatioAtTick(MAX_TICK)
+    uint160 internal constant MAX_SQRT_RATIO = 1461446703485210103287273052203988822378723970342;
+
     bytes32 public constant PAY_TYPEHASH =
         keccak256("Pay(address receiver,uint256 permitNonce)");
 
-    IUniV3Router internal immutable uniV3Router;
+    IUniV3Pool internal immutable uniV3Pool;
     IWETH public immutable weth;
     
     address internal constant ETH = 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE;
+    address internal allowedCallback;
 
     struct Signature {
         uint8 v;
@@ -56,8 +63,14 @@ contract PaymentSettlement is GelatoRelayContext, EIP712, Ownable, Pausable {
         uint256 amount
     );
 
-    constructor(address payable _uniV3Router, address payable _weth) EIP712("PaymentSettlement", "1") {
-        uniV3Router = IUniV3Router(_uniV3Router);
+    modifier checkCallback() {
+        require(msg.sender == allowedCallback, "AuctionBot: msg.sender != allowedCallback");
+        _;
+        allowedCallback = address(0);
+    }
+
+    constructor(address payable _uniV3Pool, address payable _weth) EIP712("PaymentSettlement", "1") {
+        uniV3Pool = IUniV3Pool(_uniV3Pool);
         weth = IWETH(_weth);
     }
 
@@ -126,6 +139,17 @@ contract PaymentSettlement is GelatoRelayContext, EIP712, Ownable, Pausable {
         _transferOwnership(_newOwner);
     }
 
+    // @dev Called by UniswapV3Pool after a swap
+    function uniswapV3SwapCallback(
+        int256 amount0Delta,
+        int256 amount1Delta,
+        bytes memory data
+    ) external checkCallback {
+        (address paymentToken) = abi.decode(data, (address));
+        uint256  amountToRepay = amount1Delta > 0 ? uint256(amount1Delta) : uint256(amount0Delta);
+        IERC20(paymentToken).safeTransfer(msg.sender, amountToRepay);
+    }
+
     // ====== INTERNAL FUNCTIONS ======
 
     function _settlePayment(
@@ -187,18 +211,19 @@ contract PaymentSettlement is GelatoRelayContext, EIP712, Ownable, Pausable {
             _feeToken = address(weth);
         }
 
-        IERC20(_paymentToken).safeApprove(address(_getUniV3Router()), _paymentAmount);
-        _getUniV3Router().exactOutputSingle(
-            IUniV3Router.ExactOutputSingleParams({
-                tokenIn: _paymentToken,
-                tokenOut: _feeToken,
-                fee: 500,
-                recipient: address(this),
-                deadline: block.timestamp,
-                amountOut: _fee,
-                amountInMaximum: _paymentAmount,
-                sqrtPriceLimitX96: 0
-            })
+        IUniV3Pool uniV3Pool = _getUniV3Pool();
+        IERC20(_paymentToken).safeApprove(address(uniV3Pool), _paymentAmount);
+
+        bool zeroForOne = uniV3Pool.token0() == _paymentToken;
+        int256 amountSpecified = -int256(_fee);
+        uint160 sqrtPriceLimitX96 = 0;
+        allowedCallback = address(uniV3Pool);
+        uniV3Pool.swap(
+            address(this),
+            zeroForOne,
+            amountSpecified,
+            zeroForOne ? MIN_SQRT_RATIO + 1 : MAX_SQRT_RATIO - 1,
+            abi.encode(_paymentToken)
         );
 
         if(isFeeTokenETH) {
@@ -223,8 +248,8 @@ contract PaymentSettlement is GelatoRelayContext, EIP712, Ownable, Pausable {
         return(result);
     }
 
-    function _getUniV3Router() internal virtual view returns(IUniV3Router) {
-        return(uniV3Router);
+    function _getUniV3Pool() internal virtual view returns(IUniV3Pool) {
+        return(uniV3Pool);
     }
 
     receive() external payable {
