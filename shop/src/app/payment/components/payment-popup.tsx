@@ -1,4 +1,6 @@
 import * as React from 'react'
+
+import { ConnectKitButton } from 'connectkit'
 import { motion } from 'framer-motion'
 
 import './styles.css'
@@ -58,8 +60,11 @@ export const PaymentPopup = () => (
       <div className="mt-6">
         <Text label="To pay, scan the code inside the app" key={2} />
       </div>
-      <div className="mt-8">
+      <div className="mt-16">
         <Text label="or..." key={3} />
+      </div>
+      <div className="flex flex-col items-center mt-8 w-full">
+        <ConnectKitButton />
       </div>
     </motion.ul>
   </motion.div>
