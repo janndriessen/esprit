@@ -1,5 +1,9 @@
 import {DeployFunction} from 'hardhat-deploy/types';
 import { getNamedAccounts, deployments, getChainId, ethers } from "hardhat";
+import {
+    uniV3PoolAddress,
+    wethAddress,
+} from "../../constants/addresses";
 
 
 const func: DeployFunction = async function () {
@@ -10,9 +14,6 @@ const func: DeployFunction = async function () {
 
     let { deployer } = await getNamedAccounts();
     console.log("deployer:", deployer);
-
-    const uniV3PoolAddress ="0x61875eA61fb66657F29bAF700FA5BDCC3e2DF674";
-    const wethAddress = "0xfFf9976782d46CC05630D1f6eBAb18b2324d6B14";
 
     console.log("\nDeploying PaymentSettlementTestHarness...");
     const flash = await deploy("PaymentSettlementTestHarness", {

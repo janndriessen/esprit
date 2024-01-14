@@ -3,6 +3,13 @@ import { BigNumber } from "ethers";
 import { ethers, network } from "hardhat";
 import { Signer } from "ethers";
 import {
+    ghoAddress,
+    ghoWhale,
+    uniV3PoolAddress,
+    paymentSettlementAddress,
+    wethAddress,
+} from "../constants/addresses";
+import {
     PaymentSettlementTestHarness,
     PaymentSettlementTestHarness__factory,
     IERC20Complete,
@@ -28,11 +35,6 @@ export async function impersonateAccount(address: string) {
 
 describe("PaymentSettlement", function () {
     let paymentSettlement: PaymentSettlementTestHarness;
-    const ghoAddress = "0x5d00fab5f2F97C4D682C1053cDCAA59c2c37900D";
-    const ghoWhale = "0x5D2D16217C674ECBEDD6cc9C46176363a68196C3";
-    const uniV3PoolAddress ="0x61875eA61fb66657F29bAF700FA5BDCC3e2DF674";
-    // const paymentSettlementAddress = "0x0ec33fFbf407A983757f0F20339EB6fcf004965f";
-    const wethAddress = "0xfFf9976782d46CC05630D1f6eBAb18b2324d6B14";
     const fee = ethers.utils.parseEther("0.0000000001");
     let gho: IERC20Complete;
     let signer: Signer;

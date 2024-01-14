@@ -6,6 +6,11 @@ import {
     generateVerificationCallData,
 } from "../test/utils.ts";
 
+import {
+    ghoAddress,
+    wethAddress,
+} from "../constants/addresses";
+
 async function createTask(
     data: string,
     target: string,
@@ -61,9 +66,7 @@ async function main() {
     console.log("chainId:", chainId);
 
     let amount = ethers.utils.parseEther("0.01");
-    let receiver = "0x31B50d926f9d01A476a7225F5b807f7807B39B0A";
-    const wethAddress = "0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6";
-    const ghoAddress = "0xcbE9771eD31e761b744D3cB9eF78A1f32DD99211";
+    let receiver = "0xef35B896e1c6c816177277924d04Ead587Bbc495";
     const gho = IERC20Complete__factory.connect(ghoAddress, deployerSigner);
     const relativeDeadline = 60 * 60;
     const deadline = Math.floor(new Date().getTime() / 1000) + relativeDeadline;
