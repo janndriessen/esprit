@@ -215,16 +215,20 @@ export async function generatePayCallData(
     tokenAddress: string,
     amount: BigNumberish,
     receiver: string,
-    paymentSettlement: PaymentSettlement
+    paymentSettlement: PaymentSettlement,
+    verifyCalldata: boolean = true
 ) {
-    const result = await paymentSettlement.signer.provider?.call({
-        to: paymentSettlement.address,
-        data: verifyCallData,
-    });
-    const expectedResult =
-        "0x0000000000000000000000000000000000000000000000000000000000000001";
-    if (result !== expectedResult) {
-        throw new Error("verifyData failed");
+
+    if(verifyCalldata) {
+        const result = await paymentSettlement.signer.provider?.call({
+            to: paymentSettlement.address,
+            data: verifyCallData,
+        });
+        const expectedResult =
+            "0x0000000000000000000000000000000000000000000000000000000000000001";
+        if (result !== expectedResult) {
+            throw new Error("verifyData failed");
+        }
     }
 
     const [paymentData, paySignature] = paymentSettlement.interface.decodeFunctionData(

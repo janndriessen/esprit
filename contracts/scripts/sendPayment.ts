@@ -8,7 +8,7 @@ import {
 
 import {
     ghoAddress,
-    wethAddress,
+    ethAddress,
 } from "../constants/addresses";
 
 async function createTask(
@@ -65,13 +65,13 @@ async function main() {
     };
     console.log("chainId:", chainId);
 
-    let amount = ethers.utils.parseEther("0.01");
-    let receiver = "0xef35B896e1c6c816177277924d04Ead587Bbc495";
+    let amount = ethers.utils.parseEther("100");
+    let receiver = "0x3C1a2E9CA00AF23Cd95000160f873f77F65a0041";
     const gho = IERC20Complete__factory.connect(ghoAddress, deployerSigner);
     const relativeDeadline = 60 * 60;
     const deadline = Math.floor(new Date().getTime() / 1000) + relativeDeadline;
     const fee = ethers.utils.parseEther("0.000000000001");
-    const feeToken = wethAddress;
+    const feeToken = ethAddress;
     let verifyCalldata = await generateVerificationCallData(
         gho,
         amount,
@@ -87,13 +87,14 @@ async function main() {
         ghoAddress,
         amount,
         receiver,
-        paymentSettlement
+        paymentSettlement,
+        false
     );
     const task = await createTask(
         payCalldata,
         paymentSettlement.address,
         chainId,
-        ghoAddress
+        feeToken
     );
     await awaitTask(task);
 }

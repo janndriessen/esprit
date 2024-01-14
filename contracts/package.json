@@ -8,7 +8,8 @@
     "compile": "hardhat compile",
     "test": "hardhat test",
     "deploy:sepolia": "DEPLOY='v0.0.1.sepolia' hardhat deploy",
-    "verify:sepolia": "yarn hardhat etherscan-verify --network sepolia --api-url https://api-sepolia.etherscan.io/ --api-key $SEPOLIA_ETHERSCAN_API_KEY"
+    "verify:sepolia": "yarn hardhat etherscan-verify --network sepolia --api-url https://api-sepolia.etherscan.io/ --api-key $SEPOLIA_ETHERSCAN_API_KEY",
+    "send-payment:sepolia": "yarn hardhat run --network sepolia scripts/sendPayment.ts"
   },
   "devDependencies": {
     "@gelatonetwork/relay-sdk": "^5.5.0",
