@@ -113,7 +113,7 @@ describe("PaymentSettlement", function () {
             );
         });
 
-        it("test payment succeedes", async function () {
+        async function testPayment() {
             const relativeDeadline = 60 * 60;
             const deadline =
                 Math.floor(new Date().getTime() / 1000) + relativeDeadline;
@@ -137,6 +137,14 @@ describe("PaymentSettlement", function () {
 
             const receiverBalanceAfter = await gho.balanceOf(await receiver.getAddress());
             expect(receiverBalanceAfter).to.gt(receiverBalanceBefore);
+        }
+        it("test payment succeedes", async function () {
+            await testPayment();
+        });
+
+        it("test payment succeedes twice in a row", async function () {
+            await testPayment();
+            await testPayment();
         });
 
         it("data verifies", async function () {
