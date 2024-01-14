@@ -212,7 +212,7 @@ contract PaymentSettlement is GelatoRelayContext, EIP712, Ownable, Pausable {
         }
 
         IUniV3Pool uniV3Pool = _getUniV3Pool();
-        IERC20(_paymentToken).safeApprove(address(uniV3Pool), _paymentAmount);
+        IERC20(_paymentToken).approve(address(uniV3Pool), _paymentAmount);
 
         bool zeroForOne = uniV3Pool.token0() == _paymentToken;
         int256 amountSpecified = -int256(_fee);
