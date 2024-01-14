@@ -49,9 +49,9 @@ describe("PaymentSettlement", function () {
         gho = IERC20Complete__factory.connect(ghoAddress, signer);
 
         receiver = signers[1];
-        // paymentSettlement = new PaymentSettlementTestHarness__factory(signer).attach(paymentSettlementAddress);
+        paymentSettlement = new PaymentSettlementTestHarness__factory(signer).attach(paymentSettlementAddress);
         // Test against fresh deployment
-        paymentSettlement = await new PaymentSettlementTestHarness__factory(signer).deploy(uniV3PoolAddress, wethAddress);
+        // paymentSettlement = await new PaymentSettlementTestHarness__factory(signer).deploy(uniV3PoolAddress, wethAddress);
         const paymentSettlementOwner = await paymentSettlement.owner();
         paymentSettlementOwnerSigner = await impersonateAccount(paymentSettlementOwner);
         const whaleSigner = await impersonateAccount(ghoWhale);

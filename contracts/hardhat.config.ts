@@ -9,7 +9,7 @@ const config: HardhatUserConfig = {
         hardhat: {
             forking: {
                 url: sepoliaRPCURL,
-                blockNumber: 5078049,
+                blockNumber: 5082990,
             },
             chainId: 11155111,
         },
