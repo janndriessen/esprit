@@ -10,7 +10,11 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+
+
 import { Overview } from "@/app/dashboard/components/overview"
+import { RecentSales } from "@/app/dashboard/components/recent-sales"
 
 
 
@@ -152,7 +156,7 @@ export default function Dashboard() {
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    {/* <RecentSales /> */}
+                    <RecentSales />
                   </CardContent>
                 </Card>
               </div>
