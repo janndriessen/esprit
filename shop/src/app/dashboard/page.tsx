@@ -16,8 +16,6 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/components/ui/tabs"
-
-
 import { CalendarDateRangePicker } from "@/app/dashboard/components/date-range-picker"
 import { MainNav } from "@/app/dashboard/components/main-nav"
 import { Overview } from "@/app/dashboard/components/overview"
@@ -26,16 +24,31 @@ import { Search } from "@/app/dashboard/components/search"
 import TeamSwitcher from "@/app/dashboard/components/team-switcher"
 import { UserNav } from "@/app/dashboard/components/user-nav"
 
+export const metadata: Metadata = {
+  title: "Dashboard",
+  description: "Merchant Dashboard for Esprit Payments App",
+}
 
-
-
-export default function Dashboard() {
-  return( 
-  <>  
-    <div> 
-      {/* Background Image */}
-    </div>
-    <div className="hidden flex-col md:flex">
+export default function DashboardPage() {
+  return (
+    <>
+      <div className="md:hidden">
+        <Image
+          src="/examples/dashboard-light.png"
+          width={1280}
+          height={866}
+          alt="Dashboard"
+          className="block dark:hidden"
+        />
+        <Image
+          src="/examples/dashboard-dark.png"
+          width={1280}
+          height={866}
+          alt="Dashboard"
+          className="hidden dark:block"
+        />
+      </div>
+      <div className="hidden flex-col md:flex">
         <div className="border-b">
           <div className="flex h-16 items-center px-4">
             <TeamSwitcher />
@@ -46,18 +59,29 @@ export default function Dashboard() {
             </div>
           </div>
         </div>
-        </div>
-    
-    <div className="flex-1 space-y-4 p-8 pt-6">
+        <div className="flex-1 space-y-4 p-8 pt-6">
           <div className="flex items-center justify-between space-y-2">
             <h2 className="text-3xl font-bold tracking-tight">Esprit Merchant Dashboard</h2>
             <div className="flex items-center space-x-2">
-              <CalendarDateRangePicker />
-              <Button>Download</Button>
-              </div>
+              {/* <CalendarDateRangePicker /> */}
+              <Button className="text-2xl px-6 py-6">Cash Out</Button>
             </div>
-            </div>
-    <div className="grid gap-4 mb-3 md:grid-cols-2 lg:grid-cols-4">
+          </div>
+          <Tabs defaultValue="overview" className="space-y-4">
+            <TabsList>
+              <TabsTrigger value="overview">Overview</TabsTrigger>
+              <TabsTrigger value="analytics" disabled>
+                Analytics
+              </TabsTrigger>
+              <TabsTrigger value="reports" disabled>
+                Reports
+              </TabsTrigger>
+              <TabsTrigger value="notifications" disabled>
+                Notifications
+              </TabsTrigger>
+            </TabsList>
+            <TabsContent value="overview" className="space-y-4">
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
                 <Card>
                   <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                     <CardTitle className="text-sm font-medium">
@@ -160,7 +184,7 @@ export default function Dashboard() {
                   </CardContent>
                 </Card>
               </div>
-              <div className="grid gap-4 mb-3 md:grid-cols-2 lg:grid-cols-7">
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
                 <Card className="col-span-4">
                   <CardHeader>
                     <CardTitle>Overview</CardTitle>
@@ -181,8 +205,11 @@ export default function Dashboard() {
                   </CardContent>
                 </Card>
               </div>
-
-  </>
+            </TabsContent>
+          </Tabs>
+        </div>
+      </div>
+    </>
   )
 }
 
