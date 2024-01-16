@@ -10,6 +10,8 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 
+import { Overview } from "@/app/dashboard/components/overview"
+
 
 
 
@@ -139,7 +141,7 @@ export default function Dashboard() {
                     <CardTitle>Overview</CardTitle>
                   </CardHeader>
                   <CardContent className="pl-2">
-                    {/* <Overview /> */}
+                    <Overview />
                   </CardContent>
                 </Card>
                 <Card className="col-span-3">
