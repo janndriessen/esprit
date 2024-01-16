@@ -18,13 +18,13 @@ import {
 } from "@/components/ui/tabs"
 
 
-// import { CalendarDateRangePicker } from "@/app/examples/dashboard/components/date-range-picker"
+import { CalendarDateRangePicker } from "@/app/dashboard/components/date-range-picker"
 import { MainNav } from "@/app/dashboard/components/main-nav"
 import { Overview } from "@/app/dashboard/components/overview"
 import { RecentSales } from "@/app/dashboard/components/recent-sales"
-// import { Search } from "@/app/examples/dashboard/components/search"
+import { Search } from "@/app/dashboard/components/search"
 import TeamSwitcher from "@/app/dashboard/components/team-switcher"
-// import { UserNav } from "@/app/examples/dashboard/components/user-nav"
+import { UserNav } from "@/app/dashboard/components/user-nav"
 
 
 
@@ -41,8 +41,8 @@ export default function Dashboard() {
             <TeamSwitcher />
             <MainNav className="mx-6" />
             <div className="ml-auto flex items-center space-x-4">
-              {/* <Search />
-              <UserNav /> */}
+              <Search />
+              <UserNav />
             </div>
           </div>
         </div>
@@ -52,8 +52,8 @@ export default function Dashboard() {
           <div className="flex items-center justify-between space-y-2">
             <h2 className="text-3xl font-bold tracking-tight">Esprit Merchant Dashboard</h2>
             <div className="flex items-center space-x-2">
-              {/* <CalendarDateRangePicker /> */}
-              {/* <Button>Download</Button> */}
+              <CalendarDateRangePicker />
+              <Button>Download</Button>
               </div>
             </div>
             </div>
