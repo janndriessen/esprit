@@ -1,7 +1,7 @@
-import { Metadata } from "next"
-import Image from "next/image"
+import { Metadata } from 'next'
+import Image from 'next/image'
 
-import { PrimaryButton as Button } from "@/components/ui/button"
+import { PrimaryButton as Button } from '@/components/ui/button'
 import {
   Card,
   CardContent,
@@ -9,24 +9,19 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@/components/ui/tabs"
-import { CalendarDateRangePicker } from "@/app/dashboard/components/date-range-picker"
-import { MainNav } from "@/app/dashboard/components/main-nav"
-import { Overview } from "@/app/dashboard/components/overview"
-import { RecentSales } from "@/app/dashboard/components/recent-sales"
-import { Search } from "@/app/dashboard/components/search"
-import TeamSwitcher from "@/app/dashboard/components/team-switcher"
-import { UserNav } from "@/app/dashboard/components/user-nav"
+} from '@/components/ui/card'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { CalendarDateRangePicker } from '@/app/dashboard/components/date-range-picker'
+import { MainNav } from '@/app/dashboard/components/main-nav'
+import { Overview } from '@/app/dashboard/components/overview'
+import { RecentSales } from '@/app/dashboard/components/recent-sales'
+import { Search } from '@/app/dashboard/components/search'
+import TeamSwitcher from '@/app/dashboard/components/team-switcher'
+import { UserNav } from '@/app/dashboard/components/user-nav'
 
 export const metadata: Metadata = {
-  title: "Dashboard",
-  description: "Merchant Dashboard for Esprit Payments App",
+  title: 'Dashboard',
+  description: 'Merchant Dashboard for Esprit Payments App',
 }
 
 export default function DashboardPage() {
@@ -61,7 +56,9 @@ export default function DashboardPage() {
         </div>
         <div className="flex-1 space-y-4 p-8 pt-6">
           <div className="flex items-center justify-between space-y-2">
-            <h2 className="text-3xl font-bold tracking-tight">Esprit Merchant Dashboard</h2>
+            <h2 className="text-3xl font-bold tracking-tight">
+              Esprit Merchant Dashboard
+            </h2>
             <div className="flex items-center space-x-2">
               {/* <CalendarDateRangePicker /> */}
               <Button className="text-2xl px-6 py-6">Cash Out</Button>
@@ -212,4 +209,3 @@ export default function DashboardPage() {
     </>
   )
 }
-
