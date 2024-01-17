@@ -19,6 +19,14 @@ export default function Payment() {
         <div className="absolute top-[527px] right-[228px]">
           <GhoButton onClick={onClickPay} />
         </div>
+        {isOpen ? (
+          <div
+            className="fixed inset-0 bg-white bg-opacity-80 cursor-pointer"
+            onClick={onClickPay}
+          ></div>
+        ) : (
+          <></>
+        )}
         <PaymentPopup />
       </motion.nav>
     </div>
