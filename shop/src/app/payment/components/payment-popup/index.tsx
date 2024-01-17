@@ -1,6 +1,8 @@
 import { ConnectKitButton } from 'connectkit'
 import { motion } from 'framer-motion'
 
+import { usePayment } from './providers'
+
 import './styles.css'
 
 const sidebar = {
@@ -50,45 +52,57 @@ const variantsItems = {
   },
 }
 
-export const PaymentPopup = () => (
-  <motion.div className="background shadow-xl p-8" variants={sidebar}>
-    <motion.ul variants={variants}>
-      <PayHeadline label="Pay 129.159 GHO" key={0} />
-      <QRCode code={'0x0'} key={1} />
-      <div className="mt-6">
-        <Text label="To pay, scan the code inside the app" key={2} />
-      </div>
-      <div className="mt-16">
-        <Text label="or..." key={3} />
-      </div>
-      <div className="flex flex-col items-center mt-8 w-full">
-        <motion.li variants={variantsItems}>
-          <ConnectKitButton />
-        </motion.li>
-      </div>
-    </motion.ul>
-  </motion.div>
-)
+export const PaymentPopup = () => {
+  const { amount, amountUsd, data } = usePayment()
 
-export const PayHeadline = ({ label }: { label: string }) => {
+  return (
+    <motion.div className="background shadow-xl p-8" variants={sidebar}>
+      <motion.ul variants={variants}>
+        <PayHeadline
+          label={`Pay ${amount} GHO`}
+          subtitle={`$${amountUsd}`}
+          key={0}
+        />
+        <QRCode url={data ?? ''} key={1} />
+        <div className="mt-6">
+          <Text label="To pay, scan the code inside the app" key={2} />
+        </div>
+        <div className="mt-16">
+          <Text label="or..." key={3} />
+        </div>
+        <div className="flex flex-col items-center mt-8 w-full">
+          <motion.li variants={variantsItems}>
+            <ConnectKitButton />
+          </motion.li>
+        </div>
+      </motion.ul>
+    </motion.div>
+  )
+}
+
+/* Components */
+
+export const PayHeadline = ({
+  label,
+  subtitle,
+}: {
+  label: string
+  subtitle: string
+}) => {
   return (
     <motion.li variants={variantsItems}>
-      <h2 className="font-bold text-4xl text-center mt-8">{label}</h2>
+      <p className="font-semibold text-xl text-left mt-8">{subtitle}</p>
+      <h2 className="font-bold text-4xl text-left">{label}</h2>
     </motion.li>
   )
 }
 
 /* eslint-disable @next/next/no-img-element */
-export const QRCode = ({ code }: { code: string }) => {
+export const QRCode = ({ url }: { url: string }) => {
   return (
     <motion.li variants={variantsItems}>
       <div className="bg-white rounded-xl p-8 mt-8">
-        <img
-          src="/assets/qr-code-temp.png"
-          width={300}
-          height={300}
-          alt="GHO QR code"
-        />
+        <img src={url} width={300} height={300} alt="GHO QR code" />
       </div>
     </motion.li>
   )

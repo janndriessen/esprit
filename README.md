@@ -24,3 +24,6 @@ npm install
 
 npm run dev
 ```
+
+React component online shop integration: http://localhost:3000/payment
+Merchant dashboard: http://localhost:3000/dashboard
