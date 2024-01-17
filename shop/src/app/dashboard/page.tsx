@@ -61,7 +61,7 @@ export default function DashboardPage() {
             </h2>
             <div className="flex items-center space-x-2">
               {/* <CalendarDateRangePicker /> */}
-              <Button className="text-2xl px-6 py-6">Cash Out</Button>
+              <Button className="text-2xl px-6 py-6 transition-colors hover:text-secondary hover:bg-primary">Cash Out</Button>
             </div>
           </div>
           <Tabs defaultValue="overview" className="space-y-4">
