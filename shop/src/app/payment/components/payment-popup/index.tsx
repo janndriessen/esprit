@@ -91,8 +91,10 @@ export const PayHeadline = ({
 }) => {
   return (
     <motion.li variants={variantsItems}>
-      <p className="font-semibold text-xl text-left mt-8">{subtitle}</p>
-      <h2 className="font-bold text-4xl text-left">{label}</h2>
+      <div className="mt-8">
+        {/* <p className="font-semibold text-xl text-left">{subtitle}</p> */}
+        <h2 className="font-bold text-4xl text-center">{label}</h2>
+      </div>
     </motion.li>
   )
 }
