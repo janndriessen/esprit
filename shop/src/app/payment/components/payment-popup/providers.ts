@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react'
 import QRCode from 'qrcode'
+import { v4 as uuidv4 } from 'uuid'
 
 export function usePayment() {
   const [data, setData] = useState<string | null>(null)
 
-  const paymentId = 'uuidv4()' // TODO:
+  const paymentId = uuidv4()
   const address = '0xmerchant' // TODO: add merchant address
   const amountUsd = 127
   const ghoPrice = 0.979
