@@ -1,6 +1,5 @@
 'use client'
 
-import { useEffect, useState, useRef, MutableRefObject } from 'react'
 import { motion, useCycle } from 'framer-motion'
 
 import { GhoButton } from './components/gho-button'
@@ -15,10 +14,12 @@ export default function Payment() {
   }
 
   return (
-    <div className="flex items-center justify-center h-screen">
+    <div className="bg-contain bg-[url('/assets/nike-online-shop-bg.png')] flex items-center justify-center h-screen">
       <motion.nav initial={false} animate={isOpen ? 'open' : 'closed'}>
+        <div className="absolute top-[527px] right-[228px]">
+          <GhoButton onClick={onClickPay} />
+        </div>
         <PaymentPopup />
-        <GhoButton onClick={onClickPay} />
       </motion.nav>
     </div>
   )
