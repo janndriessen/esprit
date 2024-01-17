@@ -1,6 +1,5 @@
 import { Metadata } from 'next'
 import Image from 'next/image'
-
 import { PrimaryButton as Button } from '@/components/ui/button'
 import {
   Card,
@@ -18,6 +17,7 @@ import { RecentSales } from '@/app/dashboard/components/recent-sales'
 import { Search } from '@/app/dashboard/components/search'
 import TeamSwitcher from '@/app/dashboard/components/team-switcher'
 import { UserNav } from '@/app/dashboard/components/user-nav'
+import { CashOutButton } from './components/cash-out-button'
 
 export const metadata: Metadata = {
   title: 'Dashboard',
@@ -60,8 +60,7 @@ export default function DashboardPage() {
               Esprit Merchant Dashboard
             </h2>
             <div className="flex items-center space-x-2">
-              {/* <CalendarDateRangePicker /> */}
-              <Button className="text-2xl py-6 transition-colors hover:text-secondary hover:bg-primary-foreground">Cash Out</Button>
+              <CashOutButton></CashOutButton>
             </div>
           </div>
           <Tabs defaultValue="overview" className="space-y-4">
