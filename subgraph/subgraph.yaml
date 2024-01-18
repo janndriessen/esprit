@@ -16,23 +16,11 @@ dataSources:
       apiVersion: 0.0.7
       language: wasm/assemblyscript
       entities:
-        - EIP712DomainChanged
-        - OwnershipTransferred
-        - Paused
         - Payment
-        - Unpaused
       abis:
         - name: PaymentSettlement
           file: ./abis/PaymentSettlement.json
       eventHandlers:
-        - event: EIP712DomainChanged()
-          handler: handleEIP712DomainChanged
-        - event: OwnershipTransferred(indexed address,indexed address)
-          handler: handleOwnershipTransferred
-        - event: Paused(address)
-          handler: handlePaused
         - event: Payment(indexed address,indexed address,indexed address,uint256)
           handler: handlePayment
-        - event: Unpaused(address)
-          handler: handleUnpaused
       file: ./src/payment-settlement.ts
