@@ -8,8 +8,8 @@ export function useCreatePayment() {
   const [data, setData] = useState<string | null>(null)
 
   const paymentId = uuidv4()
-  const address = '0xmerchant' // TODO: add merchant address
-  const amountUsd = 127
+  const address = '0xa79b0396ad597ef7328a97887eD0A955967be2C9'
+  const amountUsd = 5
   const ghoPrice = 0.979
   const amount = amountUsd * (1 + 1 - ghoPrice)
 
