@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import Pusher from 'pusher-js'
 import QRCode from 'qrcode'
 import { v4 as uuidv4 } from 'uuid'
+import { awaitGelatoTask } from './gelato'
 
 export function useCreatePayment() {
   const [data, setData] = useState<string | null>(null)
@@ -35,6 +36,18 @@ export function useCreatePayment() {
 export function useTrackPayment(paymentId: string) {
   const [transactionHash, setTransactionHash] = useState<string | null>(null)
 
+  const waitForTaskToComplete = async (taskId: string) => {
+    const task = await awaitGelatoTask(taskId)
+    console.log('task:', task)
+    const hash = task?.transactionHash
+    if (!hash) {
+      console.error('Error waiting for task - no tx hash')
+      return
+    }
+    console.log(`https://sepolia.etherscan.io/tx/${hash}`)
+    setTransactionHash(hash)
+  }
+
   useEffect(() => {
     console.log('Connecting to pusher:...')
     const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_APP_KEY!, {
@@ -51,9 +64,7 @@ export function useTrackPayment(paymentId: string) {
       console.log('Received pusher event:', data)
       const taskId = data.message
       console.log('task_id:', taskId)
-      // TODO: await gelato task
-      // TODO: get tx hash
-      // TODO set tx hash
+      waitForTaskToComplete(taskId)
     })
     return () => {
       pusher.unsubscribe(paymentId)
