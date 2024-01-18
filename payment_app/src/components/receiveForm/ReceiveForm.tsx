@@ -19,7 +19,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { useWeb3Auth } from "@/provider/Web3AuthProvider";
 
-const MAX_AMOUNT = 10;
+const MAX_AMOUNT = 10000;
 const formSchema = z.object({
     amount: z.coerce
         .number()

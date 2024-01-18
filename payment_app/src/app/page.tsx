@@ -13,7 +13,7 @@ export default function Home() {
         <main className="flex min-h-screen items-center justify-center">
             <Card>
                 <CardHeader>
-                    <CardTitle>Zing</CardTitle>
+                    <CardTitle>Esprit</CardTitle>
                     <CardDescription>
                         Easy Payments with QR Codes
                     </CardDescription>

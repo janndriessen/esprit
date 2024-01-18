@@ -1,8 +1,8 @@
 sources:
-  - name: flash
+  - name: esprit
     handler:
       graphql:
-        endpoint: https://api.studio.thegraph.com/query/55887/flash/version/latest
+        endpoint: https://api.studio.thegraph.com/query/55887/esprit/version/latest
 
 documents:
   - ./src/queries/get_payments.graphql

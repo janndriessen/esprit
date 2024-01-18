@@ -1,4 +1,5 @@
 import { ethers } from "ethers";
+import { ethAddress, testFeeAmount } from "./constants";
 import { BigNumberish, Signer } from "ethers";
 import { Gho, PaymentSettlement } from "@dethcrypto/eth-sdk-client/types";
 import { GelatoRelay, CallWithSyncFeeRequest } from "@gelatonetwork/relay-sdk";
@@ -17,6 +18,7 @@ export async function createTask(
         feeToken,
         isRelayContext: true,
     };
+    console.log("Creating task with request:", request);
     const { taskId } = await relay.callWithSyncFee(request);
     return taskId;
 }
@@ -226,7 +228,7 @@ export async function generateVerificationCallData(
 
     const verifyDataCallData = paymentSettlement.interface.encodeFunctionData(
         "verifyData",
-        [paymentData, paySignature]
+        [paymentData, paySignature, ethAddress, testFeeAmount]
     );
     return verifyDataCallData;
 }
@@ -249,12 +251,15 @@ export async function generatePayCallData(
         throw new Error("verifyData failed");
     }
 
-    const [paymentData, paySignature] = paymentSettlement.interface.decodeFunctionData(
+    const [paymentData, paySignature, feeToken, feeAmount] = paymentSettlement.interface.decodeFunctionData(
         "verifyData",
         verifyCallData
     );
 
     console.log("paymentData", paymentData);
+    if(feeToken !== ethAddress) {
+        throw new Error("fee token mismatch");
+    }
     if (paymentData.token !== tokenAddress) {
         throw new Error("token address mismatch");
     }

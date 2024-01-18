@@ -7,6 +7,7 @@ import {
     CardTitle,
 } from "@/components/ui/card";
 import { createTask } from "@/utils";
+import { ethAddress } from "@/constants";
 import StatusWidget from "@/components/transactionStatus/StatusWidget";
 import ErrorRedirectCountdown from "@/components/transactionStatus/ErrorRedirectCountdown";
 import Pusher from "pusher";
@@ -30,14 +31,13 @@ async function PaymentStatus({
     const [taskId, error] = await submitTransaction();
 
     async function submitTransaction() {
-        const ghoAddress = "0xc4bF5CbDaBE595361438F8c6a187bDc330539c60";
-        const chainId = 100;
+        const chainId = 11155111;
         const paymentSettlementAddress = "0x62E028A0FeE5925de63F9bAb1a31Fb922C51386C";
         const taskId = await createTask(
             calldata ??  "NOCALLDATA",
             paymentSettlementAddress,
             chainId,
-            ghoAddress
+            ethAddress
         );
         console.log("taskId:", taskId);
         const pusherConfig = {
