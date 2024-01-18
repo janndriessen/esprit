@@ -65,7 +65,7 @@ export const PaymentPopup = () => {
       {!isWaiting && !transactionHash && (
         <motion.ul variants={variants}>
           <PayHeadline
-            label={`Pay ${amount} GHO`}
+            label={`Pay ${amount.toFixed(3)} GHO`}
             subtitle={`$${amountUsd}`}
             key={0}
           />
