@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import QRCode from 'qrcode'
 import { v4 as uuidv4 } from 'uuid'
 
-export function usePayment() {
+export function useCreatePayment() {
   const [data, setData] = useState<string | null>(null)
 
   const paymentId = uuidv4()

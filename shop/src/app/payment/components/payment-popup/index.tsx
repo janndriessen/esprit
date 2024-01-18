@@ -1,7 +1,7 @@
 import { ConnectKitButton } from 'connectkit'
 import { motion } from 'framer-motion'
 
-import { usePayment } from './providers'
+import { useCreatePayment } from './providers'
 
 import './styles.css'
 
@@ -53,7 +53,7 @@ const variantsItems = {
 }
 
 export const PaymentPopup = () => {
-  const { amount, amountUsd, data, paymentId } = usePayment()
+  const { amount, amountUsd, data, paymentId } = useCreatePayment()
 
   return (
     <motion.div className="background shadow-xl p-8" variants={sidebar}>
