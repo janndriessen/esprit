@@ -1,7 +1,7 @@
 import { ConnectKitButton } from 'connectkit'
 import { motion } from 'framer-motion'
 
-import { useCreatePayment } from './providers'
+import { useCreatePayment, useTrackPayment } from './providers'
 
 import './styles.css'
 
@@ -54,6 +54,7 @@ const variantsItems = {
 
 export const PaymentPopup = () => {
   const { amount, amountUsd, data, paymentId } = useCreatePayment()
+  const { transactionHash } = useTrackPayment(paymentId)
 
   return (
     <motion.div className="background shadow-xl p-8" variants={sidebar}>
