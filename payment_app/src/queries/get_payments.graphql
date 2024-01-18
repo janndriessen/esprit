@@ -1,0 +1,25 @@
+query PaymentsReceived($user: Bytes!) {
+  payments(where: { to: $user }) {
+    amount
+    blockNumber
+    blockTimestamp
+    from
+    id
+    to
+    token
+    transactionHash
+  }
+}
+
+query PaymentsSent($user: Bytes!) {
+  payments(where: { from: $user }) {
+    amount
+    blockNumber
+    blockTimestamp
+    from
+    id
+    to
+    token
+    transactionHash
+  }
+}
