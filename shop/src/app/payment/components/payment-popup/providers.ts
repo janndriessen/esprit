@@ -34,18 +34,22 @@ export function useCreatePayment() {
 }
 
 export function useTrackPayment(paymentId: string) {
+  const [isWaiting, setIsWaiting] = useState(false)
   const [transactionHash, setTransactionHash] = useState<string | null>(null)
 
   const waitForTaskToComplete = async (taskId: string) => {
+    setIsWaiting(true)
     const task = await awaitGelatoTask(taskId)
     console.log('task:', task)
     const hash = task?.transactionHash
     if (!hash) {
       console.error('Error waiting for task - no tx hash')
+      setIsWaiting(false)
       return
     }
     console.log(`https://sepolia.etherscan.io/tx/${hash}`)
     setTransactionHash(hash)
+    setIsWaiting(false)
   }
 
   useEffect(() => {
@@ -71,5 +75,5 @@ export function useTrackPayment(paymentId: string) {
     }
   }, [paymentId])
 
-  return { transactionHash }
+  return { isWaiting, transactionHash }
 }
