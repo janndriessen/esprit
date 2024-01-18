@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react'
+import Pusher from 'pusher-js'
 import QRCode from 'qrcode'
 import { v4 as uuidv4 } from 'uuid'
+import { awaitGelatoTask } from './gelato'
 
-export function usePayment() {
+export function useCreatePayment() {
   const [data, setData] = useState<string | null>(null)
 
   const paymentId = uuidv4()
@@ -28,5 +30,50 @@ export function usePayment() {
     generatePaymentData()
   }, [])
 
-  return { amount, amountUsd, data }
+  return { amount, amountUsd, data, paymentId }
+}
+
+export function useTrackPayment(paymentId: string) {
+  const [isWaiting, setIsWaiting] = useState(false)
+  const [transactionHash, setTransactionHash] = useState<string | null>(null)
+
+  const waitForTaskToComplete = async (taskId: string) => {
+    setIsWaiting(true)
+    const task = await awaitGelatoTask(taskId)
+    console.log('task:', task)
+    const hash = task?.transactionHash
+    if (!hash) {
+      console.error('Error waiting for task - no tx hash')
+      setIsWaiting(false)
+      return
+    }
+    console.log(`https://sepolia.etherscan.io/tx/${hash}`)
+    setTransactionHash(hash)
+    setIsWaiting(false)
+  }
+
+  useEffect(() => {
+    console.log('Connecting to pusher:...')
+    const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_APP_KEY!, {
+      cluster: process.env.NEXT_PUBLIC_PUSHER_APP_CLUSTER!,
+    })
+    pusher.connection.bind('error', function (err: any) {
+      console.error('Pusher connection error:', err)
+    })
+    const channel = pusher.subscribe(paymentId)
+    console.log('Subscribed to channel:', paymentId)
+    console.log('subscribed channels:')
+    pusher.allChannels().forEach((channel) => console.log(channel.name))
+    channel.bind('payment-submitted', function (data: { message: string }) {
+      console.log('Received pusher event:', data)
+      const taskId = data.message
+      console.log('task_id:', taskId)
+      waitForTaskToComplete(taskId)
+    })
+    return () => {
+      pusher.unsubscribe(paymentId)
+    }
+  }, [paymentId])
+
+  return { isWaiting, transactionHash }
 }

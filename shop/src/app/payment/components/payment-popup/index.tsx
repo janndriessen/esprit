@@ -1,7 +1,7 @@
 import { ConnectKitButton } from 'connectkit'
 import { motion } from 'framer-motion'
 
-import { usePayment } from './providers'
+import { useCreatePayment, useTrackPayment } from './providers'
 
 import './styles.css'
 
@@ -53,29 +53,41 @@ const variantsItems = {
 }
 
 export const PaymentPopup = () => {
-  const { amount, amountUsd, data } = usePayment()
+  const { amount, amountUsd, data, paymentId } = useCreatePayment()
+  const { isWaiting, transactionHash } = useTrackPayment(paymentId)
+
+  const txText = isWaiting
+    ? 'Receiving payment. Waiting for transaction to complete.'
+    : 'The payment was successful. 👻'
 
   return (
     <motion.div className="background shadow-xl p-8" variants={sidebar}>
-      <motion.ul variants={variants}>
-        <PayHeadline
-          label={`Pay ${amount} GHO`}
-          subtitle={`$${amountUsd}`}
-          key={0}
-        />
-        <QRCode url={data ?? ''} key={1} />
-        <div className="mt-6">
-          <Text label="To pay, scan the code inside the app" key={2} />
+      {!isWaiting && !transactionHash && (
+        <motion.ul variants={variants}>
+          <PayHeadline
+            label={`Pay ${amount} GHO`}
+            subtitle={`$${amountUsd}`}
+            key={0}
+          />
+          <QRCode url={data ?? ''} key={1} />
+          <div className="mt-6">
+            <Text label="To pay, scan the code inside the app" key={2} />
+          </div>
+          <div className="mt-16">
+            <Text label="or..." key={3} />
+          </div>
+          <div className="flex flex-col items-center mt-8 w-full">
+            <motion.li variants={variantsItems}>
+              <ConnectKitButton />
+            </motion.li>
+          </div>
+        </motion.ul>
+      )}
+      {(isWaiting || transactionHash !== null) && (
+        <div>
+          <TextTransaction label={txText} hash={transactionHash} />
         </div>
-        <div className="mt-16">
-          <Text label="or..." key={3} />
-        </div>
-        <div className="flex flex-col items-center mt-8 w-full">
-          <motion.li variants={variantsItems}>
-            <ConnectKitButton />
-          </motion.li>
-        </div>
-      </motion.ul>
+      )}
     </motion.div>
   )
 }
@@ -115,5 +127,43 @@ export const Text = ({ label }: { label: string }) => {
     <motion.li variants={variantsItems}>
       <p className="font-semibold text-3xl text-center">{label}</p>
     </motion.li>
+  )
+}
+
+export function shortenAddress(
+  address: string,
+  startLength: number = 6,
+  endLength: number = 4,
+): string {
+  if (address.length < startLength + endLength) {
+    throw new Error('Address is too short to be shortened.')
+  }
+  const shortenedStart = address.substring(0, startLength)
+  const shortenedEnd = address.substring(address.length - endLength)
+  return `${shortenedStart}...${shortenedEnd}`
+}
+
+export const TextTransaction = ({
+  label,
+  hash,
+}: {
+  label: string
+  hash: string | null
+}) => {
+  return (
+    <div className="flex-col mt-20">
+      <p className="font-semibold text-3xl text-center">{label}</p>
+      {hash && (
+        <div className="grid place-items-center w-full mt-8">
+          <a
+            href={`https://sepolia.etherscan.io/tx/${hash}`}
+            target="_blank"
+            className="underline"
+          >
+            {shortenAddress(hash)}
+          </a>
+        </div>
+      )}
+    </div>
   )
 }
