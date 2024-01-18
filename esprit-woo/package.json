@@ -22,6 +22,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "pusher-js": "^8.4.0-rc2",
     "qrcode": "^1.5.3"
   },
   "devDependencies": {

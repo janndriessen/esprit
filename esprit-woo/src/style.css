@@ -32,7 +32,25 @@
   padding: 12px 16px;
 }
 
-.qr-code {
-  width: 300px;
-  height: 300px;
+.esprit-qrcode {
+  width: 40%;
 }
+
+.esprit-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.esprit-text-container {
+  margin-left: 10px;
+}
+
+.esprit-text-one {
+  font-weight: bold;
+  font-size: 16px;
+}
+
+/* .esprit-text-two {
+} */
