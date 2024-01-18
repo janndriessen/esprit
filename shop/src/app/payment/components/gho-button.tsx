@@ -10,7 +10,11 @@ type GhoButtonProps = {
 export function GhoButton({ onClick }: GhoButtonProps) {
   return (
     <motion.button whileHover={{ scale: 1.06 }} whileTap={{ scale: 0.96 }}>
-      <PrimaryButton size={'lg'} onClick={onClick}>
+      <PrimaryButton
+        size={'lg'}
+        onClick={onClick}
+        className="w-[346px] h-[65px]"
+      >
         <div className="flex items-center gap-2">
           <Image
             src="/assets/icon-light.svg"
