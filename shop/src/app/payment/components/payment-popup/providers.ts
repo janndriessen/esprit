@@ -28,5 +28,5 @@ export function usePayment() {
     generatePaymentData()
   }, [])
 
-  return { amount, amountUsd, data }
+  return { amount, amountUsd, data, paymentId }
 }
