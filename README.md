@@ -2,6 +2,10 @@
 
 Submission for [LFGHO](https://ethglobal.com/events/lfgho) - ETHGlobal 2024
 
+The `consumer` uses the Esprit app to pay with GHO in any online shop integrating our solution.
+
+The `merchant` can use our WooCommerce plug-in or for other online shops systems integrate the react component into his payment flow. With the dashboard they can check their incoming payments and off-ramp funds.
+
 ## Setup
 
 ### /contracts
