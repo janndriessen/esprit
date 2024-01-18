@@ -1,0 +1,38 @@
+specVersion: 1.0.0
+indexerHints:
+  prune: auto
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: PaymentSettlement
+    network: sepolia
+    source:
+      address: "0x62E028A0FeE5925de63F9bAb1a31Fb922C51386C"
+      abi: PaymentSettlement
+      startBlock: 5083128
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - EIP712DomainChanged
+        - OwnershipTransferred
+        - Paused
+        - Payment
+        - Unpaused
+      abis:
+        - name: PaymentSettlement
+          file: ./abis/PaymentSettlement.json
+      eventHandlers:
+        - event: EIP712DomainChanged()
+          handler: handleEIP712DomainChanged
+        - event: OwnershipTransferred(indexed address,indexed address)
+          handler: handleOwnershipTransferred
+        - event: Paused(address)
+          handler: handlePaused
+        - event: Payment(indexed address,indexed address,indexed address,uint256)
+          handler: handlePayment
+        - event: Unpaused(address)
+          handler: handleUnpaused
+      file: ./src/payment-settlement.ts
