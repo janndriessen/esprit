@@ -1,0 +1,144 @@
+diff --git a/node_modules/html5-qrcode/cjs/html5-qrcode.js b/node_modules/html5-qrcode/cjs/html5-qrcode.js
+index 27601fb..71ba636 100644
+--- a/node_modules/html5-qrcode/cjs/html5-qrcode.js
++++ b/node_modules/html5-qrcode/cjs/html5-qrcode.js
+@@ -142,7 +142,6 @@ var Html5Qrcode = (function () {
+         var element = document.getElementById(this.elementId);
+         var rootElementWidth = element.clientWidth
+             ? element.clientWidth : Constants.DEFAULT_WIDTH;
+-        element.style.position = "relative";
+         this.shouldScan = true;
+         this.element = element;
+         var $this = this;
+diff --git a/node_modules/html5-qrcode/cjs/index.js b/node_modules/html5-qrcode/cjs/index.js
+index 7afb6ce..d81c9ed 100644
+--- a/node_modules/html5-qrcode/cjs/index.js
++++ b/node_modules/html5-qrcode/cjs/index.js
+@@ -11,4 +11,5 @@ var state_manager_1 = require("./state-manager");
+ Object.defineProperty(exports, "Html5QrcodeScannerState", { enumerable: true, get: function () { return state_manager_1.Html5QrcodeScannerState; } });
+ var core_2 = require("./core");
+ Object.defineProperty(exports, "Html5QrcodeScanType", { enumerable: true, get: function () { return core_2.Html5QrcodeScanType; } });
++console.log("cjs.index.js loaded");
+ //# sourceMappingURL=index.js.map
+\ No newline at end of file
+diff --git a/node_modules/html5-qrcode/es2015/html5-qrcode.js b/node_modules/html5-qrcode/es2015/html5-qrcode.js
+index 1c4ff8d..20259fb 100644
+--- a/node_modules/html5-qrcode/es2015/html5-qrcode.js
++++ b/node_modules/html5-qrcode/es2015/html5-qrcode.js
+@@ -117,7 +117,6 @@ export class Html5Qrcode {
+         const element = document.getElementById(this.elementId);
+         const rootElementWidth = element.clientWidth
+             ? element.clientWidth : Constants.DEFAULT_WIDTH;
+-        element.style.position = "relative";
+         this.shouldScan = true;
+         this.element = element;
+         const $this = this;
+diff --git a/node_modules/html5-qrcode/es2015/index.js b/node_modules/html5-qrcode/es2015/index.js
+index 890331e..a398afc 100644
+--- a/node_modules/html5-qrcode/es2015/index.js
++++ b/node_modules/html5-qrcode/es2015/index.js
+@@ -3,4 +3,5 @@ export { Html5QrcodeScanner } from "./html5-qrcode-scanner";
+ export { Html5QrcodeSupportedFormats } from "./core";
+ export { Html5QrcodeScannerState } from "./state-manager";
+ export { Html5QrcodeScanType } from "./core";
++console.log("esm2015.index.js loaded");
+ //# sourceMappingURL=index.js.map
+\ No newline at end of file
+diff --git a/node_modules/html5-qrcode/esm/camera/core-impl.js b/node_modules/html5-qrcode/esm/camera/core-impl.js
+index 48948cb..2b98b53 100644
+--- a/node_modules/html5-qrcode/esm/camera/core-impl.js
++++ b/node_modules/html5-qrcode/esm/camera/core-impl.js
+@@ -141,16 +141,17 @@ var CameraCapabilitiesImpl = (function () {
+ }());
+ var RenderedCameraImpl = (function () {
+     function RenderedCameraImpl(parentElement, mediaStream, callbacks) {
++        console.log("RenderedCameraImpl()", { parentElement: parentElement, mediaStream: mediaStream, callbacks: callbacks });
+         this.isClosed = false;
+         this.parentElement = parentElement;
+         this.mediaStream = mediaStream;
+         this.callbacks = callbacks;
+-        this.surface = this.createVideoElement(this.parentElement.clientWidth);
++        this.surface = this.createVideoElement(this.parentElement.clientWidth, this.parentElement.clientHeight);
+         parentElement.append(this.surface);
+     }
+-    RenderedCameraImpl.prototype.createVideoElement = function (width) {
++    RenderedCameraImpl.prototype.createVideoElement = function (width, height) {
++        console.log("RenderedCameraImpl.createVideoElement()", { width: width, height: height });
+         var videoElement = document.createElement("video");
+-        videoElement.style.width = "".concat(width, "px");
+         videoElement.style.display = "block";
+         videoElement.muted = true;
+         videoElement.setAttribute("muted", "true");
+@@ -186,7 +187,12 @@ var RenderedCameraImpl = (function () {
+                         aspectRatioConstraint = {
+                             aspectRatio: options.aspectRatio
+                         };
+-                        return [4, renderedCamera.getFirstTrackOrFail().applyConstraints(aspectRatioConstraint)];
++                        console.log("Applying aspect ratio constraint", aspectRatioConstraint);
++                        var track = renderedCamera.getFirstTrackOrFail();
++                        console.log("Applying aspect ratio constraint to track", track);
++                        var capabilities = track.getCapabilities();
++                        console.log("Track capabilities", capabilities);
++                        return [4, track.applyConstraints(aspectRatioConstraint)];
+                     case 1:
+                         _a.sent();
+                         _a.label = 2;
+@@ -297,6 +303,7 @@ var CameraImpl = (function () {
+                             audio: false,
+                             video: videoConstraints
+                         };
++                        console.log("Getting user media with constraints:", videoConstraints);
+                         return [4, navigator.mediaDevices.getUserMedia(constraints)];
+                     case 1:
+                         mediaStream = _a.sent();
+diff --git a/node_modules/html5-qrcode/esm/html5-qrcode.js b/node_modules/html5-qrcode/esm/html5-qrcode.js
+index b8bc869..3147381 100644
+--- a/node_modules/html5-qrcode/esm/html5-qrcode.js
++++ b/node_modules/html5-qrcode/esm/html5-qrcode.js
+@@ -139,7 +139,6 @@ var Html5Qrcode = (function () {
+         var element = document.getElementById(this.elementId);
+         var rootElementWidth = element.clientWidth
+             ? element.clientWidth : Constants.DEFAULT_WIDTH;
+-        element.style.position = "relative";
+         this.shouldScan = true;
+         this.element = element;
+         var $this = this;
+@@ -482,6 +481,7 @@ var Html5Qrcode = (function () {
+         return qrboxSize;
+     };
+     Html5Qrcode.prototype.setupUi = function (viewfinderWidth, viewfinderHeight, internalConfig) {
++        console.log("setupUi", { viewfinderWidth: viewfinderWidth, viewfinderHeight: viewfinderHeight, internalConfig: internalConfig });
+         if (internalConfig.isShadedBoxEnabled()) {
+             this.validateQrboxSize(viewfinderWidth, viewfinderHeight, internalConfig);
+         }
+@@ -506,6 +506,7 @@ var Html5Qrcode = (function () {
+             ? this.getShadedRegionBounds(viewfinderWidth, viewfinderHeight, qrDimensions)
+             : defaultQrRegion;
+         var canvasElement = this.createCanvasElement(qrRegion.width, qrRegion.height);
++        console.log("canvasElement", canvasElement);
+         var contextAttributes = { willReadFrequently: true };
+         var context = canvasElement.getContext("2d", contextAttributes);
+         context.canvas.width = qrRegion.width;
+diff --git a/node_modules/html5-qrcode/esm/index.js b/node_modules/html5-qrcode/esm/index.js
+index 890331e..2ae584a 100644
+--- a/node_modules/html5-qrcode/esm/index.js
++++ b/node_modules/html5-qrcode/esm/index.js
+@@ -3,4 +3,5 @@ export { Html5QrcodeScanner } from "./html5-qrcode-scanner";
+ export { Html5QrcodeSupportedFormats } from "./core";
+ export { Html5QrcodeScannerState } from "./state-manager";
+ export { Html5QrcodeScanType } from "./core";
++console.log("esm.index.js loaded");
+ //# sourceMappingURL=index.js.map
+\ No newline at end of file
+diff --git a/node_modules/html5-qrcode/src/html5-qrcode.ts b/node_modules/html5-qrcode/src/html5-qrcode.ts
+index b3fcbda..851d819 100644
+--- a/node_modules/html5-qrcode/src/html5-qrcode.ts
++++ b/node_modules/html5-qrcode/src/html5-qrcode.ts
+@@ -402,7 +402,6 @@ export class Html5Qrcode {
+         const element = document.getElementById(this.elementId)!;
+         const rootElementWidth = element.clientWidth
+             ? element.clientWidth : Constants.DEFAULT_WIDTH;
+-        element.style.position = "relative";
+ 
+         this.shouldScan = true;
+         this.element = element;

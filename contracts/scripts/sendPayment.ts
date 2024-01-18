@@ -25,6 +25,7 @@ async function createTask(
         feeToken,
         isRelayContext: true,
     };
+    console.log("Creating task with request:", request);
     const { taskId } = await relay.callWithSyncFee(request);
     return taskId;
 }
@@ -66,7 +67,7 @@ async function main() {
     console.log("chainId:", chainId);
 
     let amount = ethers.utils.parseEther("100");
-    let receiver = "0x3C1a2E9CA00AF23Cd95000160f873f77F65a0041";
+    let receiver = "0x806C17df35c5678A10EbF844D66c2BbFa973200B";
     const gho = IERC20Complete__factory.connect(ghoAddress, deployerSigner);
     const relativeDeadline = 60 * 60;
     const deadline = Math.floor(new Date().getTime() / 1000) + relativeDeadline;
