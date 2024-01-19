@@ -109,10 +109,12 @@ function UserInfo({ className }: { className?: string }) {
 
       <div className="grid w-full max-w-sm items-center">
         <ScrollArea>
-          <div className="p-4">
+          <div className="my-4 bg-white bg-opacity-20 px-4 py-4 rounded-xl">
             {payments.map((payment, i) => (
               <>
-                {i > 0 && <Separator className="my-2" />}
+                {i > 0 && (
+                  <Separator className="my-4 bg-foreground opacity-20" />
+                )}
                 <a
                   key={payment.id}
                   className={
@@ -121,14 +123,15 @@ function UserInfo({ className }: { className?: string }) {
                       : "text-red-500"
                   }
                   href={`https://sepolia.etherscan.io/tx/${payment.transactionHash}`}
+                  target="_blank"
                 >
-                  <span className="text-left mr-8">
+                  <span className="text-left mr-8 text-foreground text-lg">
                     {" "}
-                    {dateFormat(payment.timestamp, "dd.mm")}{" "}
+                    {dateFormat(payment.timestamp, "dd.mm.yy")}{" "}
                   </span>
-                  <span className="float-right">
+                  <span className="float-right text-lg">
                     {payment.direction == "received" ? " +" : " -"}
-                    {payment.amount} $
+                    {payment.amount} GHO
                   </span>
                 </a>
               </>

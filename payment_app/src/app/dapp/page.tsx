@@ -1,6 +1,5 @@
 "use client";
 
-import { Card } from "@/components/ui/card";
 import UserInfo from "@/components/user/UserInfo";
 
 export default function Home() {
