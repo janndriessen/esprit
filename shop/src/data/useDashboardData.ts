@@ -2,12 +2,14 @@ import { useEffect, useState } from 'react';
 import { PaymentsReceivedDocument, PaymentsSentDocument, execute } from '../../.graphclient';
 import { ethers } from 'ethers';
 
-type Payment = {
+export type Payment = {
   direction: 'sent' | 'received';
   amount: string;
   transactionHash: string;
   timestamp: Date;
   id: string;
+  from: string; 
+  to: string;
 };
 
 const MERCHANT_ADDRESS = '0xa79b0396ad597ef7328a97887eD0A955967be2C9';
