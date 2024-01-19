@@ -100,25 +100,30 @@ function UserInfo({ className }: { className?: string }) {
 
   return (
     <>
-      <Card className="flex flex-row w-full p-4 h-[200px] content-between shadow-md rounded-2xl">
-        <div className="flex flex-col content-between w-full h-full">
-          <div className="flex flex-col h-full">
-            <Label className="text-xl">ESPRIT</Label>
-            <p className="text-md text-gray-400">
-              {userAddress.length > 10 ? shortenAddress(userAddress) : ""}
-            </p>
-          </div>
-          <div className="text-3xl font-bold">
-            {parseFloat(userBalance).toFixed(2)} GHO
-          </div>
-        </div>
-        <div className="p-4">
-          <Image alt="Esprit logo" src={"/logo.png"} height={96} width={96} />
-        </div>
-      </Card>
-
       <div className="grid w-full max-w-sm items-center">
         <ScrollArea>
+          <Card className="flex flex-row w-full p-4 h-[200px] content-between shadow-md rounded-2xl">
+            <div className="flex flex-col content-between w-full h-full">
+              <div className="flex flex-col h-full">
+                <Label className="text-xl">ESPRIT</Label>
+                <p className="text-md text-gray-400">
+                  {userAddress.length > 10 ? shortenAddress(userAddress) : ""}
+                </p>
+              </div>
+              <div className="text-3xl font-bold">
+                {parseFloat(userBalance).toFixed(2)} GHO
+              </div>
+            </div>
+            <div className="p-4">
+              <Image
+                alt="Esprit logo"
+                src={"/logo.png"}
+                height={96}
+                width={96}
+              />
+            </div>
+          </Card>
+
           <div className="my-4 bg-white bg-opacity-20 px-4 py-4 rounded-xl">
             {payments.map((payment, i) => (
               <>
@@ -147,7 +152,7 @@ function UserInfo({ className }: { className?: string }) {
               </>
             ))}
           </div>
-        </ScrollArea>{" "}
+        </ScrollArea>
       </div>
     </>
   );
