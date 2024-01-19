@@ -1,6 +1,8 @@
 import { ConnectKitButton } from 'connectkit'
 import { motion } from 'framer-motion'
 
+import { cn } from '@/lib/utils'
+
 import { useCreatePayment, useTrackPayment } from './providers'
 
 import './styles.css'
@@ -151,8 +153,9 @@ export const TextTransaction = ({
   hash: string | null
 }) => {
   return (
-    <div className="flex-col mt-20">
+    <div className="flex flex-col mt-20 items-center">
       <p className="font-semibold text-3xl text-center">{label}</p>
+      {!hash && <LoadingSpinner size={48} className="mt-8" />}
       {hash && (
         <div className="grid place-items-center w-full mt-8">
           <a
@@ -165,5 +168,35 @@ export const TextTransaction = ({
         </div>
       )}
     </div>
+  )
+}
+
+// Copied from: https://github.com/shadcn-ui/ui/discussions/1694#discussioncomment-7851248
+export interface ISVGProps extends React.SVGProps<SVGSVGElement> {
+  size?: number
+  className?: string
+}
+
+export const LoadingSpinner = ({
+  size = 24,
+  className,
+  ...props
+}: ISVGProps) => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={size}
+      height={size}
+      {...props}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={cn('animate-spin', className)}
+    >
+      <path d="M21 12a9 9 0 1 1-6.219-8.56" />
+    </svg>
   )
 }
