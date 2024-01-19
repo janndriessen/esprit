@@ -12,12 +12,15 @@ import {
   execute,
 } from "../../../.graphclient";
 import Image from "next/image";
+import Link from "next/link";
+import { BsCamera, BsHouse, BsQrCodeScan } from "react-icons/bs";
 
 import { Card } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 
 import dateFormat from "dateformat";
+import { Button } from "../ui/button";
 
 type Payment = {
   direction: "sent" | "received";
@@ -105,7 +108,7 @@ function UserInfo({ className }: { className?: string }) {
           <Card className="flex flex-row w-full p-4 h-[200px] content-between shadow-md rounded-2xl">
             <div className="flex flex-col content-between w-full h-full">
               <div className="flex flex-col h-full">
-                <Label className="text-xl">ESPRIT</Label>
+                <Label className="text-xl font-semibold">ESPRIT</Label>
                 <p className="text-md text-gray-400">
                   {userAddress.length > 10 ? shortenAddress(userAddress) : ""}
                 </p>
@@ -153,6 +156,21 @@ function UserInfo({ className }: { className?: string }) {
             ))}
           </div>
         </ScrollArea>
+
+        <div className="flex content-between mx-auto bottom-6 absolute gap-4">
+          <Link href="/dapp/receive">
+            <Button className="flex h-[64px] px-8 gap-4 rounded-full bg-foreground">
+              <BsQrCodeScan size={20} />
+              <div className="text-lg">Request</div>
+            </Button>
+          </Link>
+          <Link href="/dapp/pay">
+            <Button className="flex h-[64px] px-8 gap-4 rounded-full bg-foreground min-w-[160px]">
+              <BsCamera size={20} />
+              <div className="text-lg">Pay</div>
+            </Button>
+          </Link>
+        </div>
       </div>
     </>
   );

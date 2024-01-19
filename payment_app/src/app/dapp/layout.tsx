@@ -9,11 +9,7 @@ export default function RootLayout({
 }) {
   return (
     <main>
-      {/* <div className="flex justify-center items-center fixed top-0 bg-black text-white w-screen h-16 z-50">
-        <div className="text-3xl">Esprit</div>
-      </div> */}
       <Web3AuthProvider>{children}</Web3AuthProvider>
-      <Navigationbar className="fixed bottom-0 bg-black text-white w-screen h-16" />
     </main>
   );
 }
