@@ -42,6 +42,7 @@
     "wagmi": "^1.4.13"
   },
   "devDependencies": {
+    "@graphprotocol/client-cli": "^3.0.0",
     "@types/node": "^20",
     "@types/qrcode": "^1.5.5",
     "@types/react": "^18",
