@@ -26,6 +26,7 @@ export const useDashboardData = () => {
         timestamp: new Date(parseInt(payment.blockTimestamp) * 1000),
         transactionHash: payment.transactionHash,
         id: payment.id,
+        from: payment.from,
       }));
       setPaymentsReceived(formattedReceived);
 
@@ -37,6 +38,7 @@ export const useDashboardData = () => {
         timestamp: new Date(parseInt(payment.blockTimestamp) * 1000),
         transactionHash: payment.transactionHash,
         id: payment.id,
+        to: payment.to,
       }));
       setPaymentsSent(formattedSent);
     };
