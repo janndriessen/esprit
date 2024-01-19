@@ -25,7 +25,7 @@ import { useDashboardData } from '@/data/useDashboardData'
 // }
 
 export default function DashboardPage() {
-  const { paymentsReceived, paymentsSent } = useDashboardData()
+  const { paymentsReceived, paymentsSent } = useDashboardData()  
   const numberOfPaymentsReceived = paymentsReceived.length
   const totalReceivedAmount = paymentsReceived.reduce((acc, payment) => {
     return acc + parseFloat(payment.amount)
@@ -192,7 +192,7 @@ export default function DashboardPage() {
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <RecentSales />
+                    <RecentSales payments={paymentsReceived} />
                   </CardContent>
                 </Card>
               </div>
