@@ -23,7 +23,7 @@ export function RecentSales({ payments }: RecentSalesProps) {
   return (
     <div className="space-y-8">
       {payments.map((payment) => (
-        <div key={payment.id} className="flex items-centre">
+        <div key={payment.id} className="flex items-center">
           <Avatar className="h-9 w-9">
             <AvatarImage src="/avatars/01.png" alt="Avatar" />
             <AvatarFallback>0x</AvatarFallback>
@@ -34,7 +34,8 @@ export function RecentSales({ payments }: RecentSalesProps) {
               {payment.timestamp.toLocaleDateString()} {' '}
             </p>
           </div>
-          <div className="ml-auto font-medium">+${payment.amount}</div>
+          <div className="ml-auto font-medium">+${parseFloat(payment.amount).toFixed(2)}</div>
+
           <RefundButton />
         </div>
       ))}
