@@ -112,8 +112,8 @@ function UserInfo({ className }: { className?: string }) {
             {parseFloat(userBalance).toFixed(2)} GHO
           </div>
         </div>
-        <div className="p-2">
-          <Image alt="Esprit logo" src={"/logo.png"} height={64} width={64} />
+        <div className="p-4">
+          <Image alt="Esprit logo" src={"/logo.png"} height={96} width={96} />
         </div>
       </Card>
 
