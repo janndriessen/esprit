@@ -6,11 +6,30 @@ The `consumer` uses the Esprit app to pay with GHO in any online shop integratin
 
 The `merchant` can use our WooCommerce plug-in or for other online shops systems integrate the react component into his payment flow. With the dashboard they can check their incoming payments and off-ramp funds.
 
+## Deployments
+
+Customer App: https://payment-app-cyan.vercel.app/
+
 ## Setup
 
 ### /contracts
 
 For setup instructions, check the [contracts README](/contracts/README.md)
+
+### /payment_app
+
+This is the consumer app that is used for payments.
+
+```
+cp .env.default cp .env.local
+
+yarn
+
+yarn dev
+
+```
+
+The development version of the app runs on port 4000: http://localhost:4000
 
 ### /shop
 
