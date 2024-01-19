@@ -1,23 +1,16 @@
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { RefundButton } from './refund-button';
-
-type Payment = {
-  direction: 'sent' | 'received';
-  amount: string;
-  transactionHash: string;
-  timestamp: Date;
-  id: string;
-  from: string;
-};
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { RefundButton } from './refund-button'
+import { Payment } from '@/data/useDashboardData'
 
 type RecentSalesProps = {
-  payments: Payment[];
-};
-
-function truncateAddress(address: string, chars = 7): string {
-  return `${address.substring(0, chars + 2)}...${address.substring(address.length - 4)}`;
+  payments: Payment[]
 }
 
+function truncateAddress(address: string, chars = 7): string {
+  return `${address.substring(0, chars + 2)}...${address.substring(
+    address.length - 4,
+  )}`
+}
 
 export function RecentSales({ payments }: RecentSalesProps) {
   return (
@@ -29,16 +22,21 @@ export function RecentSales({ payments }: RecentSalesProps) {
             <AvatarFallback>0x</AvatarFallback>
           </Avatar>
           <div className="ml-4 space-y-1">
-            <p className="text-sm font-medium leading-none"> {truncateAddress(payment.from)}</p>
+            <p className="text-sm font-medium leading-none">
+              {' '}
+              {truncateAddress(payment.from)}
+            </p>
             <p className="text-sm text-muted-foreground">
-              {payment.timestamp.toLocaleDateString()} {' '}
+              {payment.timestamp.toLocaleDateString()}{' '}
             </p>
           </div>
-          <div className="ml-auto font-medium">+${parseFloat(payment.amount).toFixed(2)}</div>
+          <div className="ml-auto font-medium">
+            +${parseFloat(payment.amount).toFixed(2)}
+          </div>
 
           <RefundButton />
         </div>
       ))}
     </div>
-  );
+  )
 }

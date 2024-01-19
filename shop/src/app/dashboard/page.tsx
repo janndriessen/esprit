@@ -1,6 +1,5 @@
 'use client'
 
-import { Metadata } from 'next'
 import {
   Card,
   CardContent,
@@ -17,15 +16,10 @@ import { Search } from '@/app/dashboard/components/search'
 import TeamSwitcher from '@/app/dashboard/components/team-switcher'
 import { UserNav } from '@/app/dashboard/components/user-nav'
 import { CashOutButton } from './components/cash-out-button'
-import { useDashboardData } from '@/data/useDashboardData'
-
-// export const metadata: Metadata = {
-//   title: 'Dashboard',
-//   description: 'Merchant Dashboard for Esprit Payments App',
-// }
+import { Payment, useDashboardData } from '@/data/useDashboardData'
 
 export default function DashboardPage() {
-  const { paymentsReceived, paymentsSent } = useDashboardData()  
+  const { paymentsReceived, paymentsSent } = useDashboardData()
   const numberOfPaymentsReceived = paymentsReceived.length
   const totalReceivedAmount = paymentsReceived.reduce((acc, payment) => {
     return acc + parseFloat(payment.amount)
