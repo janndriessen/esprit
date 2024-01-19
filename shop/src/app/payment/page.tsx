@@ -16,7 +16,7 @@ export default function Payment() {
   return (
     <div className="bg-contain bg-[url('/assets/nike-online-shop-bg.png')] flex items-center justify-center h-screen">
       <motion.nav initial={false} animate={isOpen ? 'open' : 'closed'}>
-        <div className="absolute top-[527px] right-[228px]">
+        <div className="absolute top-[510px] right-[218px]">
           <GhoButton onClick={onClickPay} />
         </div>
         {isOpen ? (
