@@ -113,7 +113,7 @@ function UserInfo({ className }: { className?: string }) {
             {payments.map((payment, i) => (
               <>
                 {i > 0 && (
-                  <Separator className="my-4 bg-foreground opacity-20" />
+                  <Separator className="my-4 bg-foreground opacity-10" />
                 )}
                 <a
                   key={payment.id}
