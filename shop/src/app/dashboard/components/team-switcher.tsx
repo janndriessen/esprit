@@ -57,12 +57,12 @@ const groups = [
     label: 'Teams',
     teams: [
       {
-        label: 'Nice Shoes Inc.',
-        value: 'nice-shoes-inc',
+        label: 'Nike EU',
+        value: 'nike-eu',
       },
       {
-        label: 'Cool Poaps Inc.',
-        value: 'cool-poaps-inc',
+        label: 'Nike USA',
+        value: 'nike-usa',
       },
     ],
   },
