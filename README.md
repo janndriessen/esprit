@@ -1,4 +1,4 @@
-# ESPRIT
+# ESPRIT 👻
 
 Submission for [LFGHO](https://ethglobal.com/events/lfgho) - ETHGlobal 2024
 
@@ -29,5 +29,6 @@ npm install
 npm run dev
 ```
 
-React component online shop integration: http://localhost:3000/payment
+Demo of the react component integration: http://localhost:3000/payment
+
 Merchant dashboard: http://localhost:3000/dashboard
