@@ -1,6 +1,4 @@
-import { Metadata } from 'next'
-import Image from 'next/image'
-import { PrimaryButton as Button } from '@/components/ui/button'
+import { Metadata } from 'next';
 import {
   Card,
   CardContent,
@@ -10,7 +8,6 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { CalendarDateRangePicker } from '@/app/dashboard/components/date-range-picker'
 import { MainNav } from '@/app/dashboard/components/main-nav'
 import { Overview } from '@/app/dashboard/components/overview'
 import { RecentSales } from '@/app/dashboard/components/recent-sales'
