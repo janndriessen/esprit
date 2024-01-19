@@ -1,28 +1,28 @@
 'use client'
 
-import React from 'react';
-import { useDashboardData } from '@/data/useDashboardData'; // Assuming this is the correct path to your hook
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
+import React from 'react'
+import { useDashboardData } from '@/data/useDashboardData'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
 const Page = () => {
-  const payments = useDashboardData(); // Use the custom hook to get payments data
+  const { paymentsReceived, paymentsSent } = useDashboardData()
+
+  const totalReceivedAmount = paymentsReceived.reduce((acc, payment) => {
+    return acc + parseFloat(payment.amount)
+  }, 0)
 
   return (
     <Card>
       <CardHeader>
-          <CardTitle>Payments</CardTitle>
+        <CardTitle>Payments Received</CardTitle>
       </CardHeader>
       <CardContent>
         {/* Display the payments data */}
-        <pre>{JSON.stringify(payments, null, 2)}</pre>
+        <pre>{JSON.stringify(paymentsReceived, null, 2)}</pre>
+        <div>Total Received ${totalReceivedAmount.toFixed(2)} USD</div>
       </CardContent>
     </Card>
-  );
-};
+  )
+}
 
-export default Page;
+export default Page
