@@ -1,4 +1,7 @@
+'use client'
+
 import { PrimaryButton as Button } from '@/components/ui/button'
+import { useDashboardData } from '@/data/useDashboardData'
 
 import {
   Drawer,
@@ -12,6 +15,10 @@ import {
 } from '@/components/ui/drawer'
 
 export function CashOutButton() {
+  const { paymentsReceived, paymentsSent } = useDashboardData()
+  const totalReceivedAmount = paymentsReceived.reduce((acc, payment) => {
+    return acc + parseFloat(payment.amount)
+  }, 0)
   return (
     <Drawer>
       <DrawerTrigger asChild>
@@ -25,7 +32,7 @@ export function CashOutButton() {
             Withdraw Funds
           </DrawerTitle>
           <DrawerDescription className="text-md text-center">
-            489.97 GHO
+            ${totalReceivedAmount.toFixed(2)} USD
           </DrawerDescription>
         </DrawerHeader>
         <DrawerFooter className="flex justify-end space-x-4">
