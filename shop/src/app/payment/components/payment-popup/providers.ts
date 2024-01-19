@@ -4,14 +4,18 @@ import QRCode from 'qrcode'
 import { v4 as uuidv4 } from 'uuid'
 import { awaitGelatoTask } from './gelato'
 
+const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_APP_KEY!, {
+  cluster: process.env.NEXT_PUBLIC_PUSHER_APP_CLUSTER!,
+})
+
+const paymentId = uuidv4()
+const address = '0xa79b0396ad597ef7328a97887eD0A955967be2C9'
+const amountUsd = 127
+const ghoPrice = 0.979
+const amount = amountUsd * (1 + 1 - ghoPrice)
+
 export function useCreatePayment() {
   const [data, setData] = useState<string | null>(null)
-
-  const paymentId = uuidv4()
-  const address = '0xa79b0396ad597ef7328a97887eD0A955967be2C9'
-  const amountUsd = 127
-  const ghoPrice = 0.979
-  const amount = amountUsd * (1 + 1 - ghoPrice)
 
   const addressAndAmount = new URLSearchParams({
     paymentId,
@@ -53,10 +57,7 @@ export function useTrackPayment(paymentId: string) {
   }
 
   useEffect(() => {
-    console.log('Connecting to pusher:...')
-    const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_APP_KEY!, {
-      cluster: process.env.NEXT_PUBLIC_PUSHER_APP_CLUSTER!,
-    })
+    console.log('Connecting to pusher:...', paymentId)
     pusher.connection.bind('error', function (err: any) {
       console.error('Pusher connection error:', err)
     })
