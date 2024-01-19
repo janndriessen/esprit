@@ -8,7 +8,7 @@ export default function Home() {
     <main className="background flex min-h-screen items-center justify-center p-20">
       <div className="flex-col items-center align-center">
         <Image
-          alt="Index Coop Logo"
+          alt="Esprit logo"
           src={"/logo.png"}
           height={128}
           width={128}

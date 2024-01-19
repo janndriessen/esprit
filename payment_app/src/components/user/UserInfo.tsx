@@ -1,5 +1,7 @@
 "use client";
+
 import { useEffect, useState } from "react";
+
 import { useWeb3Auth } from "@/provider/Web3AuthProvider";
 import { Label } from "@/components/ui/label";
 import { getSepoliaSdk } from "@dethcrypto/eth-sdk-client";
@@ -9,6 +11,7 @@ import {
   PaymentsSentDocument,
   execute,
 } from "../../../.graphclient";
+import Image from "next/image";
 
 import { Card } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -97,13 +100,20 @@ function UserInfo({ className }: { className?: string }) {
 
   return (
     <>
-      <Card className="flex flex-col items-center justify-evenly w-full">
-        <Label className="text-2xl">Balance:</Label>
-        <Label className="text-2xl">
-          {userAddress.length > 10 ? shortenAddress(userAddress) : ""}
-        </Label>
-        <div className="text-2xl font-bold text-center">
-          {parseFloat(userBalance).toFixed(2)} $
+      <Card className="flex flex-row w-full p-4 h-[200px] content-between shadow-md rounded-2xl">
+        <div className="flex flex-col content-between w-full h-full">
+          <div className="flex flex-col h-full">
+            <Label className="text-xl">ESPRIT</Label>
+            <p className="text-md text-gray-400">
+              {userAddress.length > 10 ? shortenAddress(userAddress) : ""}
+            </p>
+          </div>
+          <div className="text-3xl font-bold">
+            {parseFloat(userBalance).toFixed(2)} GHO
+          </div>
+        </div>
+        <div className="p-2">
+          <Image alt="Esprit logo" src={"/logo.png"} height={64} width={64} />
         </div>
       </Card>
 
