@@ -1,10 +1,16 @@
-# ESPRIT 👻
+# ESPRIT
 
 Submission for [LFGHO](https://ethglobal.com/events/lfgho) - ETHGlobal 2024
+
+<img src="https://github.com/janndriessen/ghopay/assets/2104965/92ec1949-c148-4eed-86a5-9a281c4feced" width="100" height="100" />
+
+<hr />
 
 The `consumer` uses the Esprit app to pay with GHO in any online shop integrating our solution.
 
 The `merchant` can use our WooCommerce plug-in or for other online shops systems integrate the react component into his payment flow. With the dashboard they can check their incoming payments and off-ramp funds.
+
+<hr />
 
 ## Deployments
 
