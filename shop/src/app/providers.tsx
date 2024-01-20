@@ -14,7 +14,7 @@ const config = createConfig(
     walletConnectProjectId: process.env.WALLETCONNECT_PROJECT_ID!,
 
     // Required
-    appName: 'GHOPAY',
+    appName: 'ESPRIT',
 
     // Optional
     appDescription: 'G(H)O PAY!',
