@@ -1,6 +1,5 @@
-import { Metadata } from 'next'
-import Image from 'next/image'
-import { PrimaryButton as Button } from '@/components/ui/button'
+'use client'
+
 import {
   Card,
   CardContent,
@@ -10,7 +9,6 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { CalendarDateRangePicker } from '@/app/dashboard/components/date-range-picker'
 import { MainNav } from '@/app/dashboard/components/main-nav'
 import { Overview } from '@/app/dashboard/components/overview'
 import { RecentSales } from '@/app/dashboard/components/recent-sales'
@@ -18,31 +16,16 @@ import { Search } from '@/app/dashboard/components/search'
 import TeamSwitcher from '@/app/dashboard/components/team-switcher'
 import { UserNav } from '@/app/dashboard/components/user-nav'
 import { CashOutButton } from './components/cash-out-button'
-
-export const metadata: Metadata = {
-  title: 'Dashboard',
-  description: 'Merchant Dashboard for Esprit Payments App',
-}
+import { Payment, useDashboardData } from '@/data/useDashboardData'
 
 export default function DashboardPage() {
+  const { paymentsReceived, paymentsSent } = useDashboardData()
+  const numberOfPaymentsReceived = paymentsReceived.length
+  const totalReceivedAmount = paymentsReceived.reduce((acc, payment) => {
+    return acc + parseFloat(payment.amount)
+  }, 0)
   return (
     <>
-      <div className="md:hidden">
-        <Image
-          src="/examples/dashboard-light.png"
-          width={1280}
-          height={866}
-          alt="Dashboard"
-          className="block dark:hidden"
-        />
-        <Image
-          src="/examples/dashboard-dark.png"
-          width={1280}
-          height={866}
-          alt="Dashboard"
-          className="hidden dark:block"
-        />
-      </div>
       <div className="hidden flex-col md:flex">
         <div className="border-b">
           <div className="flex h-16 items-center px-4">
@@ -97,7 +80,9 @@ export default function DashboardPage() {
                     </svg>
                   </CardHeader>
                   <CardContent>
-                    <div className="text-2xl font-bold">$45,231.89</div>
+                    <div className="text-2xl font-bold">
+                      ${totalReceivedAmount.toFixed(2)}
+                    </div>
                     <p className="text-xs text-muted-foreground">
                       +20.1% from last month
                     </p>
@@ -106,7 +91,7 @@ export default function DashboardPage() {
                 <Card>
                   <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                     <CardTitle className="text-sm font-medium">
-                      Subscriptions
+                      Total Customers
                     </CardTitle>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -132,7 +117,9 @@ export default function DashboardPage() {
                 </Card>
                 <Card>
                   <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm font-medium">Sales</CardTitle>
+                    <CardTitle className="text-sm font-medium">
+                      Recent Sales
+                    </CardTitle>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       viewBox="0 0 24 24"
@@ -148,7 +135,9 @@ export default function DashboardPage() {
                     </svg>
                   </CardHeader>
                   <CardContent>
-                    <div className="text-2xl font-bold">+12,234</div>
+                    <div className="text-2xl font-bold">
+                      +{numberOfPaymentsReceived}
+                    </div>
                     <p className="text-xs text-muted-foreground">
                       +19% from last month
                     </p>
@@ -197,7 +186,7 @@ export default function DashboardPage() {
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <RecentSales />
+                    <RecentSales payments={paymentsReceived} />
                   </CardContent>
                 </Card>
               </div>
