@@ -14,7 +14,9 @@ The `merchant` can use our WooCommerce plug-in or for other online shops systems
 
 ## Deployments
 
-Customer App: https://payment-app-cyan.vercel.app/
+Demo Customer App: https://payment-app-cyan.vercel.app/
+
+Demo WooCommerce Plug-In: https://foreverzeropay.com/
 
 ## Setup
 
