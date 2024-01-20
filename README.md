@@ -22,6 +22,10 @@ Customer App: https://payment-app-cyan.vercel.app/
 
 For setup instructions, check the [contracts README](/contracts/README.md)
 
+### /esprit-woo
+
+For setup instructions, check the [README](/esprit-woo/README.md)
+
 ### /payment_app
 
 This is the consumer app that is used for payments.
