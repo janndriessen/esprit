@@ -44,15 +44,15 @@ function my_gateway_init() {
                 add_action( 'wp_enqueue_scripts', function() {
                     global $woocommerce;  
                     $cart_order_total = $woocommerce->cart->total;
-                    wp_enqueue_style('style',  plugin_dir_url(__FILE__)."src/style.css", [], "1.6");
+                    wp_enqueue_style('style',  plugin_dir_url(__FILE__)."src/style.css", [], "1.8");
                     // $script_path = plugin_dir_url(__FILE__)."src/index.js";
                     $script_path = plugin_dir_url(__FILE__)."build/index.js";
-                    wp_register_script('script_handler', $script_path, [], "1.6", true); // change version if script cached and loading old script
+                    wp_register_script('script_handler', $script_path, [], "1.8", true); // change version if script cached and loading old script
                     wp_localize_script('script_handler', 'data', [
                         'amount' => $cart_order_total,
                         'address' => $this->evmaddress,
                     ]);
-                    wp_enqueue_script('script_handler', plugin_dir_url(__FILE__)."build/index.js", [], "1.6", true);
+                    wp_enqueue_script('script_handler', plugin_dir_url(__FILE__)."build/index.js", [], "1.8", true);
                 });
 
                 add_filter('woocommerce_gateway_description', function($description, $payment_id) {
